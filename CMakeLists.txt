@@ -1,33 +1,28 @@
 cmake_minimum_required(VERSION 3.31.3)
-project(final_work)
+project(final_work VERSION 1.0 LANGUAGES CXX)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
     message("OS    : ${CMAKE_SYSTEM_NAME}")
-    set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64")
+    # set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64")
+    set(CMAKE_OSX_ARCHITECTURES "arm64")
     message("Arch  : ${CMAKE_OSX_ARCHITECTURES}")
 endif()
 
-
-set(CMAKE_CXX_FLAGS_DEBUG           "-std=c++20 -O0 -g -Wall -fcolor-diagnostics -fansi-escape-codes -DDEBUG")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO  "-std=c++20 -O2 -g -DNDEBUG")
-set(CMAKE_CXX_FLAGS_RELEASE         "-std=c++20 -O3 -DNDEBUG")
-set(CMAKE_CXX_FLAGS_MINSIZEREL      "-std=c++20 -Os -DNDEBUG")
+include(custom_compile_flags)
 
 
-option(ENABLE_TESTS "Enable tests" OFF)
+option(ENABLE_TESTS "Enable tests" ON)
 if (${ENABLE_TESTS})
     enable_testing()
     add_subdirectory(tests)
 endif()
 
 
-# add_subdirectory(dynamiclib)
-# add_subdirectory(staticlib)
-# add_subdirectory(framework)
-add_subdirectory(executable)
-# add_subdirectory(graphic_exe)
-
-
-
-
+add_subdirectory(src/dynamiclib)
+add_subdirectory(src/staticlib)
+add_subdirectory(src/framework)
+add_subdirectory(src/server)
+add_subdirectory(src/client)

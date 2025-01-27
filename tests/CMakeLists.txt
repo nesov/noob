@@ -7,20 +7,13 @@ set(TEST_SOURCES    src/main.cpp
                     src/tests_new.cpp
 )
 
-include(FetchContent)
-FetchContent_Declare(
-    googletest
-    URL https://github.com/google/googletest/archive/main.zip
-    # URL ${CMAKE_CURRENT_SOURCE_DIR}/3rd_party/archive/main.zip
-)
-FetchContent_MakeAvailable(googletest)
-
-include(GoogleTest)
+include(gtest_dep)
 
 add_executable(${TEST_TARGET} ${TEST_SOURCES})
 target_include_directories(${TEST_TARGET} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(${TEST_TARGET} PUBLIC GTest::gtest_main GTest::gtest)
 
 gtest_discover_tests(${TEST_TARGET} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tests)
-execute_process(COMMAND ctest WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+# execute_process(COMMAND ctest WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
+set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "TestApps")

@@ -16,14 +16,3 @@ int main(){
 
     return 0;
 }
-
-
-
-// #include <FL/Fl.H>
-// #include <FL/Fl_Window.H>
-
-// int main() {
-//     Fl_Window win(300, 200, "FLTK Test");
-//     win.show();
-//     return Fl::run();
-// }
