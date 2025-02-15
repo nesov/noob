@@ -16,4 +16,4 @@ target_link_libraries(${TEST_TARGET} PUBLIC GTest::gtest_main GTest::gtest)
 gtest_discover_tests(${TEST_TARGET} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tests)
 # execute_process(COMMAND ctest WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
-set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "TestApps")
+set_target_properties(${TEST_TARGET} PROPERTIES FOLDER "Tests")

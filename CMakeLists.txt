@@ -21,8 +21,7 @@ if (${ENABLE_TESTS})
 endif()
 
 
-add_subdirectory(src/dynamiclib)
-add_subdirectory(src/staticlib)
-add_subdirectory(src/framework)
+add_subdirectory(src/__ssapilib)
+add_subdirectory(src/__calc_engine)
 add_subdirectory(src/server)
 add_subdirectory(src/client)

@@ -1,18 +1,8 @@
-#include <iostream>
 
-#include "mainheader.h"
+#include "AsyncServer.h"
 
-void c_method(){
-    std::cout << "Hello from executable" << std::endl;
-}
-
-int main(){
-    framework_functiona();
-    framework_functionb();
-
-    c_method();
-    a_method(); 
-    b_method();
-
+int main() {
+    AsyncServer server(8080);
+    server.start();
     return 0;
 }
