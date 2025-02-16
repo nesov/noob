@@ -33,8 +33,10 @@ JsonObject JsonObject::deserialize(const std::string &str) {
     while ((start = str.find("\"", end)) != std::string::npos) {
         end = str.find("\"", start + 1);
         std::string key = str.substr(start + 1, end - start - 1);
+
         start = str.find("\"", end + 1);
         end = str.find("\"", start + 1);
+        
         std::string value = str.substr(start + 1, end - start - 1);
         jsonObject.set(key, value);
     }

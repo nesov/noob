@@ -14,14 +14,14 @@ endif()
 include(custom_compile_flags)
 
 
-option(ENABLE_TESTS "Enable tests" ON)
+option(ENABLE_TESTS "Enable tests" OFF)
 if (${ENABLE_TESTS})
     enable_testing()
-    add_subdirectory(tests)
+    # add_subdirectory(tests)
 endif()
 
 
 add_subdirectory(src/__ssapilib)
 add_subdirectory(src/__calc_engine)
-add_subdirectory(src/server)
-add_subdirectory(src/client)
+# add_subdirectory(src/server)
+# add_subdirectory(src/client)

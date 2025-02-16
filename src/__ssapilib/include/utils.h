@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -8,14 +8,6 @@
 
 #include <iostream>
 
-namespace ssapi{
-
-    struct sockaddr_inn {
-        sockaddr_in server_address;
-    }; 
-
-    struct Message {
-        char type;
-        void* data;
-    };
-}
+struct sockaddr_inn {
+    sockaddr_in server_address;
+};

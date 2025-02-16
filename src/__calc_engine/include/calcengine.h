@@ -4,15 +4,10 @@
 
 namespace calculations {
 
-    class CalcEngine {
-        public:
-            CalcEngine();
-            ~CalcEngine();
-    
+    struct Data {
+        void* getVal();
+        void* data;
     };
-    
-
-    struct Data {};
 
     class ITask {
      public: 
@@ -23,18 +18,26 @@ namespace calculations {
 
     class Task_1 : public ITask {
      public:  
-        void execute(Data& ) { 
-
+        void execute(Data& data) { 
+            const char* prepdata = static_cast<char*>(data.getVal());
+            const char* resltData = taskOne(prepdata); // result data;
         }
-
-    };
-
-    class Task_2 : public ITask {
-     public:
-        void execute(Data& ){
-        
+     private: 
+        char* taskOne(const char* name){
+            /*
+            1 Відправити з клієнта на сервер своє ім’я,
+            на сервері додати до імені своє прізвище та відпрарезультат на клієнт.
+            */
+            static char result[20] = ""; 
+            const char* firstName = "Alexandr";
+            
+            if (strcmp(name, firstName) == 0) {
+                strcpy(result, firstName);  
+                strcat(result, " Niesov"); 
+                return result;
+            }
+            return result;
         }
     };
-
 
 }
