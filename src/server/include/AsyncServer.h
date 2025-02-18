@@ -1,7 +1,7 @@
 
 #pragma once
-#include <atomic>
 
+#include <atomic>
 #include "MessageHandler.h"
 
 
@@ -12,11 +12,11 @@ class AsyncServer {
     void start();
    
  private:
-    int server_socket;
-    int port;
-    std::atomic<bool> stop_server;
-    MessageHandler handler;
-        
+   MessageHandler handler;
+   int server_socket;
+   int port;
+   std::atomic<bool> stop_server;
+
     void setup_server_socket();
     void listen_for_clients();
     void handle_client(int client_socket);

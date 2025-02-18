@@ -1,10 +1,10 @@
 
 set(TARGET ssapilib)
-set(INCLUDE_DIRECTORIES include)
-
-set(SOURCE_DIR src/TcpClient.cpp 
+set(SOURCE_DIR  src/TcpClient.cpp 
                 src/TcpServer.cpp 
-                src/Message.cpp)
+                src/Message.cpp
+                src/Data.cpp
+                src/INetwork.cpp)
 
 
 

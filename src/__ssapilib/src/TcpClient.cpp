@@ -1,63 +1,92 @@
 
+#include <unistd.h>
+#include <arpa/inet.h>
 
-#include "utils.h"
-#include "Message.h"
+#include <iostream>
 
-#include "TcpClient.h"
+#include "ssapi/TcpClient.h"
+#include "ssapi/Consts.h"
+#include "ssapi/Message.h"
 
-TcpClient::TcpClient(const char *host, int port) :m_host(host), m_port(port) {
-    init(m_host, m_port);
+TcpClient::TcpClient(const std::string& serverIp, int port) {
+    connection.clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+    if (connection.clientSocket == -1) {
+        std::cerr << "Failed to create socket\n";
+    }
+
+    m_serverAddr.sin_family = AF_INET;
+    m_serverAddr.sin_port = htons(port);
+    inet_pton(AF_INET, serverIp.c_str(), &m_serverAddr.sin_addr);
 }
 
 TcpClient::~TcpClient() {
-    close(m_client_fd);
+    disconnect();
 }
 
-inline int TcpClient::connect_() {
-    m_connection_status = connect(this->m_client_fd,
-                                  (sockaddr *)&m_serv.server_address, sizeof(m_serv.server_address));
-    if (m_connection_status < 0) {
-        std::cerr << "Connection error\n";
-        close(m_client_fd);
-        return -1;
-    } else {
-        std::cerr << "Connected!!!\n";
+bool TcpClient::connectToServer() {
+    if (connect(connection.clientSocket, (struct sockaddr*)&m_serverAddr, sizeof(m_serverAddr)) == 0) {
+        return true;
     }
-    return 0;
+    std::cerr << "Connection to server failed\n";
+    return false;
 }
 
-inline void TcpClient::receiveMessage(Message &message) {
-    int bytes{0};
-    while (bytes != sizeof(message)) {
-        bytes = read(m_client_fd, &message, sizeof(message));
-    }
+// void TcpClient::sendMessage(const Message& message) {
+//     std::lock_guard<std::mutex> lock(m_mutex);
+//     size_t messageSize = sizeof(message);
+//     char buffer[kBufferSize] = {0};
+//     buffer = static_cast<char*>(message);
+//     send(connection.clientSocket, buffer, messageSize, 0);
+// }
+
+// void TcpClient::sendMessage(const Message& message) {
+//     std::lock_guard<std::mutex> lock(m_mutex);
+//     std::string buffer = message.toBuffer();
+//     uint32_t messageSize = buffer.size();
+//     send(connection.clientSocket, &messageSize, sizeof(messageSize), 0);
+//     send(connection.clientSocket, buffer.c_str(), buffer.size(), 0);
+// }
+
+void TcpClient::sendMessage(const Message& message) {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    std::string buffer = message.toBuffer();
+    uint32_t messageSize = buffer.size();
+    send(connection.clientSocket, &messageSize, sizeof(messageSize), 0);
+    send(connection.clientSocket, buffer.c_str(), buffer.size(), 0);
 }
 
-inline void TcpClient::sendMessage(Message &message) {
-    int bytes{0};
-    while (bytes != sizeof(message)) {
-        bytes = send(m_client_fd, &message, sizeof(message), 0);
-    }
+
+
+// Message TcpClient::receiveMessage() {
+//     std::lock_guard<std::mutex> lock(m_mutex);
+//     char buffer[kBufferSize] = {0};
+//     recv(connection.clientSocket, buffer, sizeof(buffer), 0);
+//     Message message {buffer};
+//     return message;
+// }
+// Message TcpClient::receiveMessage() {
+//     uint32_t messageSize;
+//     recv(connection.clientSocket, &messageSize, sizeof(messageSize), 0);
+//     std::string buffer(messageSize, '\0');
+//     recv(connection.clientSocket, buffer.data(), messageSize, 0);
+//     Message message;
+//     message.fromBuffer(buffer);
+//     return message;
+// }
+
+Message TcpClient::receiveMessage() {
+    uint32_t messageSize;
+    recv(connection.clientSocket, &messageSize, sizeof(messageSize), 0);
+    std::string buffer(messageSize, '\0');
+    recv(connection.clientSocket, buffer.data(), messageSize, 0);
+    Message message;
+    message.fromBuffer(buffer);
+    return message;
+    // return Message::fromBuffer(buffer);
 }
 
-int TcpClient::init(const char *host, const int port)
-{
-    m_client_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (m_client_fd == -1)
-    {
-        std::cerr << "Crearing socket Error\n";
-        return -1;
-    }
 
-    std::memset(&m_serv.server_address, 0, sizeof(m_serv.server_address));
-    m_serv.server_address.sin_family = AF_INET;
-    m_serv.server_address.sin_port = htons(port);
 
-    if (inet_pton(AF_INET, host, &m_serv.server_address.sin_addr) <= 0)
-    {
-        std::cerr << "Converting address error\n";
-        close(m_client_fd);
-        return -1;
-    }
-    return 0;
+void TcpClient::disconnect() {
+    close(connection.clientSocket);
 }

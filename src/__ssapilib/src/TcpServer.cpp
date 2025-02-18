@@ -1,82 +1,82 @@
+#include <unistd.h>
+#include <arpa/inet.h>
 
-#include "ssapi.h"
-#include "utils.h"
-#include "Message.h"
+#include <cstring>
+#include <algorithm> 
+#include <iostream>
 
-namespace ssapi{
-    namespace server {
-        constexpr uint8_t kMaxConnections {5};
+#include "ssapi/TcpServer.h"
 
-        TcpServer::TcpServer (int port) :m_port(port) {
-            init();
+TcpServer::TcpServer(int port) : m_port(port), m_running(false) {
+    m_serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+    if (m_serverSocket == -1) {
+        std::cerr << "Failed to create socket\n";
+    }
+
+    sockaddr_in serverAddr{};
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_addr.s_addr = INADDR_ANY;
+    serverAddr.sin_port = htons(m_port);
+
+    if (bind(m_serverSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) < 0) {
+        std::cerr << "Bind failed\n";
+    }
+
+    if (listen(m_serverSocket, 5) < 0) {
+        std::cerr << "Listen failed\n";
+    }
+}
+
+TcpServer::~TcpServer() {
+    stop();
+}
+
+void TcpServer::start() {
+    m_running = true;
+    m_future = std::async(std::launch::async, &TcpServer::acceptClients, this);
+}
+
+void TcpServer::stop() {
+    m_running = false;
+    close(m_serverSocket);
+    for (int client : m_clients) {
+        close(client);
+    }
+}
+
+void TcpServer::acceptClients() {
+    sockaddr_in clientAddr{};
+    socklen_t addrLen = sizeof(clientAddr);
+    while (m_running) {
+        int clientSocket = accept(m_serverSocket, (struct sockaddr* )&clientAddr, &addrLen);
+        if (clientSocket < 0) {
+            std::cerr << "Client accept failed\n";
+            continue;
         }
 
-        TcpServer::~TcpServer(){
-            close(m_server_fd);
-        }
+        std::lock_guard<std::mutex> lock(m_mutex);
+        m_clients.push_back(clientSocket);
 
-        
-        int TcpServer::listen_(){
-            if (listen(m_server_fd, kMaxConnections) < 0) {
-                std::cerr << "Listening error\n";
-                close(m_server_fd);
-                return -1;
-            }
-            std::cout << "Server is up and running on : " << m_port << "...\n";
-            return 0;
-        }
+        std::future<void> fut = std::async(std::launch::async, &TcpServer::handleClient, this, clientSocket);
+    }
+}
 
-        int TcpServer::accept_(){
-            sockaddr_in client_address;
-            socklen_t client_len = sizeof(client_address);
-    
-            m_client_fd = accept(m_server_fd, (sockaddr*)&client_address, &client_len);
-            if (m_client_fd < 0) {
-                std::cerr << "Accept connection error\n";
-                close(m_server_fd);
-                return -1;
-            } else {
-                std::cout << "New connection is accepted\n" ;
-            }
-            return 0;
-        }
+void TcpServer::handleClient(int clientSocket) {
+    char buffer[1024] = {0};
 
-        int TcpServer::bind_(int port){
-            if (bind(m_server_fd, (sockaddr*)&m_serv, sizeof(m_serv)) < 0) {
-                std::cerr << "Socket bind error\n";
-                close(m_server_fd);
-                return -1;
-            }
-            return 0;
-        }
+    while (recv(clientSocket, buffer, sizeof(buffer), 0) > 0) {
+        std::cout << "Received: " << buffer << std::endl;
+        broadcastMessage(buffer);
+    }
 
-        void TcpServer::receiveMessage(Message&){}
-        void TcpServer::sendMessage(Message&){}
+    close(clientSocket);
+    std::lock_guard<std::mutex> lock(m_mutex);
+    m_clients.erase(std::remove(m_clients.begin(), m_clients.end(), clientSocket), m_clients.end());
+}
 
-        int TcpServer::init(){
-            m_server_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-
-            if (m_server_fd == -1) {
-                std::cerr << "Socket creation error\n";
-                return -1;    
-            } else {
-                std::cerr << "Socket has been created\n";
-            }
-        
-            int opt = 1;
-            if (setsockopt(m_server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
-                std::cerr << "SO_REUSEADDR setting error\n";
-                close(m_server_fd);
-                return -1;
-            }
-        
-            std::memset(&m_serv.server_address, 0, sizeof(m_serv));
-            m_serv.server_address.sin_family = AF_INET;
-            m_serv.server_address.sin_addr.s_addr = INADDR_ANY;
-            m_serv.server_address.sin_port = htons(m_port);
-
-            return 0;
-        
-        }
+void TcpServer::broadcastMessage(const std::string& message) {
+    std::lock_guard<std::mutex> lock(m_mutex);
+    for (int client : m_clients) {
+        send(client, message.c_str(), message.size(), 0);
     }
 }

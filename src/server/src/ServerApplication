@@ -1,0 +1,25 @@
+
+// #include "MessageHandler.h"
+// #include "TcpServer.h"
+// #include "Message.h"
+
+// class ServerApplication {
+//     private:
+//         MessageHandler* handler;
+//         TcpServer* tcpserver;
+//         Message message;
+
+//     public:
+//         ServerApplication(){}
+//         ~ServerApplication(){
+
+//             tcpserver -> stop();
+//             delete tcpserver;
+//         }
+
+
+//     void run(){
+//         tcpserver = new TcpServer(9090);  
+//         tcpserver -> start();
+//     }
+// }; 

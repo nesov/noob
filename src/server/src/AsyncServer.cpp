@@ -62,8 +62,7 @@ void AsyncServer::listen_for_clients() {
         sockaddr_in client_addr{};
         socklen_t addr_len = sizeof(client_addr);
         int client_socket = accept(server_socket, (struct sockaddr *)&client_addr, &addr_len);
-        if (client_socket < 0)
-        {
+        if (client_socket < 0) {
             if (stop_server.load())
                 return;
             perror("Accept failed");
