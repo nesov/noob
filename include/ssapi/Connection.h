@@ -1,6 +1,6 @@
 
 #pragma once
 
-struct Connection {
+class Connection {
     int clientSocket;
 };

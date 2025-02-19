@@ -21,7 +21,7 @@ if (${ENABLE_TESTS})
 endif()
 
 
-add_subdirectory(src/__ssapilib)
-add_subdirectory(src/__calc_engine)
+add_subdirectory(src/__ssapi)
+add_subdirectory(src/__proc)
 # add_subdirectory(src/server)
 # add_subdirectory(src/client)
