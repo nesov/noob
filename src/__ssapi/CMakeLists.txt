@@ -4,7 +4,7 @@ set(SOURCE_DIR  src/TcpClient.cpp
                 src/TcpServer.cpp 
                 src/Message.cpp
                 src/Data.cpp
-                src/INetwork.cpp)
+                src/INetworkService.cpp)
 
 
 

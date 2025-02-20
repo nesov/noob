@@ -1,62 +1,48 @@
 
-#include <sstream>
-#include <variant>
-
 #include "ssapi/Message.h"
 
-Message::Message(MessageType type, const Data& data) 
-            : m_messageType(type), m_messageData(data) {}
+// Message::Message() {}
 
-Message::Message(char* data) {
-    m_messageType = MessageType::StringData;
-    m_messageData.StringData = data;
+Message::Message(std::string data) : m_messageData(std::move(data)) {}
+
+Message::Message(const char *data) : m_messageData(data) {}
+
+Message::Message(Message&& other){
+    std::swap (this->m_messageData, other.m_messageData);
+    std::swap (this->m_messageType, other.m_messageType);
 }
 
-// Message::Message(char type, int data) :m_type(type){
-//     m_messageData.IntegerData = data;
-// }
+// Message::~Message(){}
 
-Message::Message() { };
-
-Message::Message(int data) {
-    m_messageType = MessageType::IntegerData;
-    m_messageData.IntegerData = data;
-}
-Message::Message(bool data) {
-    m_messageType = MessageType::BoolData;
-    m_messageData.BoolData = data;
+std::string Message::getData() const { 
+    return m_messageData; 
 }
 
-Message::~Message(){};
-
-// std::string Message::getData() {
-//     return m_data;
-// }
-
-Data Message::getData() {
-    return m_messageData;
+MessageType Message::getType() const { 
+    return m_messageType; 
 }
 
-
-std::string Message::toBuffer() {
-    std::ostringstream oss;
-    oss << static_cast<int>(m_messageType) << " " 
-        << m_messageData.IntegerData << " " 
-        << m_messageData.BoolData << " " 
-        << m_messageData.StringData;
-    return oss.str();
+size_t Message::size() const {
+    return m_messageData.size(); 
 }
 
-Message Message::fromBuffer(const std::string& buffer) {
-    std::istringstream iss(buffer);
-    int type;
-    Data data;
-    iss >> type >> data.IntegerData >> data.BoolData;
-    std::getline(iss, data.StringData);
-    
-    return Message(static_cast<MessageType>(type), data);
+std::vector<char> Message::toBuffer() const {
+    uint32_t dataSize = htonl(static_cast<uint32_t>(m_messageData.size()));
+    std::vector<char> buffer(sizeof(dataSize) + m_messageData.size());
+    std::memcpy(buffer.data(), &dataSize, sizeof(dataSize));
+    std::memcpy(buffer.data() + sizeof(dataSize), m_messageData.data(), m_messageData.size());
+    return buffer;
 }
 
-
-
-
+inline static Message fromBuffer(const std::vector<char> &buffer) {
+    if (buffer.size() < sizeof(uint32_t)) {
+        throw std::runtime_error("Invalid buffer size");
+    }
+    uint32_t dataSize;
+    std::memcpy(&dataSize, buffer.data(), sizeof(dataSize));
+    dataSize = ntohl(dataSize);
+    if (buffer.size() < sizeof(uint32_t) + dataSize) {
+        throw std::runtime_error("Incomplete message");
+    }
+    return Message(std::string(buffer.begin() + sizeof(uint32_t), buffer.begin() + sizeof(uint32_t) + dataSize));
+}

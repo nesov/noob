@@ -1,5 +1,5 @@
 #pragma once
-#include<string>
+#include <string>
 
 struct Data {
     int IntegerData;

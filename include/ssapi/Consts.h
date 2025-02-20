@@ -1,3 +1,7 @@
 #pragma once
+#include <string>
 
-constexpr int kBufferSize {1024};
+namespace ssapi {
+    constexpr std::string kHost {"127.0.0.1"};
+    constexpr int         kPort {8080};
+}

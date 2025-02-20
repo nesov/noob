@@ -5,23 +5,23 @@
 #include <future>
 #include <netinet/in.h> 
 
-class TcpServer {
-public:
-    TcpServer(int port);
-    ~TcpServer();
+#include "ssapi/Message.h"
+#include "ssapi/INetworkService.h"
 
-    void start();
-    void stop();
-    void broadcastMessage(const std::string& message);
+namespace ssapi {
+    class TcpServer : public INetworkService {
+    public:
+        explicit TcpServer(int port);
+        bool start() override;
+        void stop() override;
 
-private:
-    void acceptClients();
-    void handleClient(int clientSocket);
+        bool sendMessage(const Message &message) override;
+        Message receiveMessage() override;
 
-    int m_serverSocket;
-    int m_port;
-    std::vector<int> m_clients;
-    std::mutex m_mutex;
-    bool m_running;
-    std::future<void> m_future;
-};
+    private:
+        int m_serverFd;
+        int m_port;
+        std::mutex m_clientsMutex;
+        std::vector<int> m_clients;
+    };
+} //namespace ssapi

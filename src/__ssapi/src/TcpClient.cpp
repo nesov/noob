@@ -1,92 +1,61 @@
 
-#include <unistd.h>
-#include <arpa/inet.h>
-
-#include <iostream>
-
 #include "ssapi/TcpClient.h"
-#include "ssapi/Consts.h"
-#include "ssapi/Message.h"
 
-TcpClient::TcpClient(const std::string& serverIp, int port) {
-    connection.clientSocket = socket(AF_INET, SOCK_STREAM, 0);
-    if (connection.clientSocket == -1) {
-        std::cerr << "Failed to create socket\n";
+namespace ssapi {
+
+    TcpClient::TcpClient(const std::string& ip, int port) 
+                    : m_serverIp(ip), m_serverPort(port), m_socketFd(-1) {}
+
+    bool TcpClient::start() {
+        m_socketFd = socket(AF_INET, SOCK_STREAM, 0);
+        if (m_socketFd < 0)
+            return false;
+        sockaddr_in serverAddr{};
+        serverAddr.sin_family = AF_INET;
+        serverAddr.sin_port = htons(m_serverPort);
+        inet_pton(AF_INET, m_serverIp.c_str(), &serverAddr.sin_addr);
+
+        return connect(m_socketFd, (sockaddr *)&serverAddr, sizeof(serverAddr)) == 0;
     }
 
-    m_serverAddr.sin_family = AF_INET;
-    m_serverAddr.sin_port = htons(port);
-    inet_pton(AF_INET, serverIp.c_str(), &m_serverAddr.sin_addr);
-}
+    void TcpClient::stop() {
+        if (m_socketFd >= 0)
+            close(m_socketFd);
+    }
 
-TcpClient::~TcpClient() {
-    disconnect();
-}
+    bool TcpClient::sendMessage(const Message &message) {
+        std::vector<char> buffer = message.toBuffer();
+        size_t totalSent = 0;
+        size_t toSend = buffer.size();
 
-bool TcpClient::connectToServer() {
-    if (connect(connection.clientSocket, (struct sockaddr*)&m_serverAddr, sizeof(m_serverAddr)) == 0) {
+        while (totalSent < toSend){
+            ssize_t sent = ::send(m_socketFd, buffer.data() + totalSent, toSend - totalSent, 0);
+            if (sent <= 0)
+                return false;
+            totalSent += sent;
+        }
         return true;
     }
-    std::cerr << "Connection to server failed\n";
-    return false;
-}
 
-// void TcpClient::sendMessage(const Message& message) {
-//     std::lock_guard<std::mutex> lock(m_mutex);
-//     size_t messageSize = sizeof(message);
-//     char buffer[kBufferSize] = {0};
-//     buffer = static_cast<char*>(message);
-//     send(connection.clientSocket, buffer, messageSize, 0);
-// }
+    Message TcpClient::receiveMessage() {
+        uint32_t messageSize = 0;
+        ssize_t received = ::recv(m_socketFd, &messageSize, sizeof(messageSize), MSG_WAITALL);
+        if (received != sizeof(messageSize)) {
+            throw std::runtime_error("Connection closed or error on receive");
+        }
 
-// void TcpClient::sendMessage(const Message& message) {
-//     std::lock_guard<std::mutex> lock(m_mutex);
-//     std::string buffer = message.toBuffer();
-//     uint32_t messageSize = buffer.size();
-//     send(connection.clientSocket, &messageSize, sizeof(messageSize), 0);
-//     send(connection.clientSocket, buffer.c_str(), buffer.size(), 0);
-// }
+        messageSize = ntohl(messageSize);
+        std::vector<char> buffer(messageSize);
+        size_t totalReceived = 0;
 
-void TcpClient::sendMessage(const Message& message) {
-    std::lock_guard<std::mutex> lock(m_mutex);
-    std::string buffer = message.toBuffer();
-    uint32_t messageSize = buffer.size();
-    send(connection.clientSocket, &messageSize, sizeof(messageSize), 0);
-    send(connection.clientSocket, buffer.c_str(), buffer.size(), 0);
-}
-
-
-
-// Message TcpClient::receiveMessage() {
-//     std::lock_guard<std::mutex> lock(m_mutex);
-//     char buffer[kBufferSize] = {0};
-//     recv(connection.clientSocket, buffer, sizeof(buffer), 0);
-//     Message message {buffer};
-//     return message;
-// }
-// Message TcpClient::receiveMessage() {
-//     uint32_t messageSize;
-//     recv(connection.clientSocket, &messageSize, sizeof(messageSize), 0);
-//     std::string buffer(messageSize, '\0');
-//     recv(connection.clientSocket, buffer.data(), messageSize, 0);
-//     Message message;
-//     message.fromBuffer(buffer);
-//     return message;
-// }
-
-Message TcpClient::receiveMessage() {
-    uint32_t messageSize;
-    recv(connection.clientSocket, &messageSize, sizeof(messageSize), 0);
-    std::string buffer(messageSize, '\0');
-    recv(connection.clientSocket, buffer.data(), messageSize, 0);
-    Message message;
-    message.fromBuffer(buffer);
-    return message;
-    // return Message::fromBuffer(buffer);
-}
-
-
-
-void TcpClient::disconnect() {
-    close(connection.clientSocket);
-}
+        while (totalReceived < messageSize) {
+            ssize_t bytesRead = ::recv(m_socketFd, buffer.data() + totalReceived, messageSize - totalReceived, 0);
+            if (bytesRead <= 0) {
+                throw std::runtime_error("Connection closed or error on receive");
+            }
+            totalReceived += bytesRead;
+        }
+        return Message::fromBuffer(buffer);
+    }
+    
+} //namespace ssapi

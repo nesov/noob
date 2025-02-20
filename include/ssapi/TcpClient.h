@@ -1,33 +1,32 @@
 #pragma once
 
-
-
 #include <netinet/in.h> 
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
 
 #include <string>
 #include <mutex>
+#include <iostream>
 
-#include "ssapi/INetwork.h"
+#include "ssapi/INetworkService.h"
 #include "ssapi/Message.h"
 #include "ssapi/Connection.h"
 
-class TcpClient : public INetwork {
-public:
-    TcpClient(const std::string& serverIp, int port);
-    ~TcpClient();
-    
-    void start();
-    void stop();
+namespace ssapi {
 
-    void sendMessage(const Message& );
-    Message receiveMessage();
+    class TcpClient : public INetworkService {
+    public:
+        TcpClient(const std::string &ip, int port);
+        bool start() override;
+        void stop() override;
+        bool sendMessage(const Message &message) override;
+        Message receiveMessage() override;
 
-private:
-    Connection connection;
-    int m_socket;
-    struct sockaddr_in m_serverAddr;
-    std::mutex m_mutex;
+    private:
+        std::string m_serverIp;
+        int m_serverPort;
+        int m_socketFd;
+    };
 
-    bool connectToServer();
-    void disconnect();
-};
+} // namespace ssapi

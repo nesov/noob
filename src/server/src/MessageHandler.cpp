@@ -2,9 +2,8 @@
 
 #include "MessageHandler.h"
 #include "JsonObject.h"
-#include "Message.h"
+#include "ssapi/Message.h"
 #include <iostream>
-#include 
 
 
 // JsonObject MessageHandler::handle(const JsonObject& message) {
@@ -39,9 +38,7 @@ Message MessageHandler::handle(Message& message) {
     switch(type) {
         case 2:
             taskProcessor = new TaskProcessor_1;
-            MessageData = taskProcessor->execute());
-
-            
+            Data data = taskProcessor->execute();
             break;
 
         default:
