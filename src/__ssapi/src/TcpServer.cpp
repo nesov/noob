@@ -79,8 +79,8 @@ namespace ssapi {
             }
             return Message::fromBuffer(buffer);
         }
-        // throw std::runtime_error("No clients connected or no message received");
-        return {"Error"};
+        throw std::runtime_error("No clients connected or no message received");
+        // return {"Error"};
     }
  
  }//namespace ssapi

@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-namespace calcucations{
+namespace calcucations {
 
     // string.h
     char* taskOne(const char* name){

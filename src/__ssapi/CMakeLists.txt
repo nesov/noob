@@ -1,5 +1,5 @@
 
-set(TARGET ssapilib)
+set(TARGET ssapi)
 set(SOURCE_DIR  src/TcpClient.cpp 
                 src/TcpServer.cpp 
                 src/Message.cpp

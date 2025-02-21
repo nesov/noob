@@ -57,5 +57,5 @@ namespace ssapi {
         }
         return Message::fromBuffer(buffer);
     }
-    
+
 } //namespace ssapi

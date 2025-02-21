@@ -1,7 +1,8 @@
 
 // #include "AsyncServer.h"
 #include "ssapi/TcpClient.h"
-#include "ssapi/INetwork.h" 
+#include "ssapi/TcpServer.h"
+#include "ssapi/INetworkService.h" 
 #include "ssapi/Consts.h"
 
 
@@ -12,7 +13,7 @@ int main() {
    
     // INetwork* netservice = new ssapi::TcpClient(ssapi::kHost,ssapi::kPort);
 
-    INetwork* netservice =  new TcpServer()
+    INetworkService* netservice =  new ssapi::TcpServer(ssapi::kPort);
 
     // Message mes = {"Hello world!\n"};
 
