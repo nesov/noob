@@ -20,7 +20,7 @@ namespace ssapi {
         TcpClient(const std::string &ip, int port);
         bool start() override;
         void stop() override;
-        bool sendMessage(const Message &message) override;
+        bool sendMessage(Message &message) override;
         Message receiveMessage() override;
 
     private:
@@ -30,3 +30,5 @@ namespace ssapi {
     };
 
 } // namespace ssapi
+
+

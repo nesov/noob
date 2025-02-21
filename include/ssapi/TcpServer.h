@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <mutex>
-#include <future>
 #include <netinet/in.h> 
 
 #include "ssapi/Message.h"
@@ -12,10 +11,11 @@ namespace ssapi {
     class TcpServer : public INetworkService {
     public:
         explicit TcpServer(int port);
+        ~TcpServer();
         bool start() override;
         void stop() override;
 
-        bool sendMessage(const Message &message) override;
+        bool sendMessage(Message &message) override;
         Message receiveMessage() override;
 
     private:

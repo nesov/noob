@@ -3,7 +3,7 @@
 #include "ssapi/Data.h"
 #include "proc/TaskProcessor_1.h"
 
-Data TaskProcessor_1::execute(Data &data) {
+Data TaskProcessor_1::execute(Data& data) {
     std::string input = data.StringData;
     std::string result = taskOne(input.c_str());
    
@@ -20,8 +20,7 @@ char * TaskProcessor_1::taskOne(const char *name) {
     static char result[20] = "";
     const char *firstName = "Alexandr";
 
-    if (strcmp(name, firstName) == 0)
-    {
+    if (strcmp(name, firstName) == 0) {
         strcpy(result, firstName);
         strcat(result, " Niesov");
         return result;

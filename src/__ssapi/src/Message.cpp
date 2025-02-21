@@ -1,48 +1,41 @@
 
 #include "ssapi/Message.h"
 
-// Message::Message() {}
+Message::Message(const char* data) : 
+                m_messageType(MessageType::echo), m_messageData(std::string(data)) {}
 
-Message::Message(std::string data) : m_messageData(std::move(data)) {}
-
-Message::Message(const char *data) : m_messageData(data) {}
-
-Message::Message(Message&& other){
-    std::swap (this->m_messageData, other.m_messageData);
-    std::swap (this->m_messageType, other.m_messageType);
+std::ostream& operator<<(std::ostream &os, const Message& message) {
+    os << static_cast<int>(message.m_messageType) << " : " << message.m_messageData << '\n';
+    return os;
 }
 
-// Message::~Message(){}
-
-std::string Message::getData() const { 
-    return m_messageData; 
+MessageType Message::getType() const {
+    return m_messageType;
+}
+std::string Message::getData() const {
+    return m_messageData;
 }
 
-MessageType Message::getType() const { 
-    return m_messageType; 
+void Message::setData(const char* data) {
+    m_messageData = std::string(data);
 }
 
-size_t Message::size() const {
-    return m_messageData.size(); 
+void Message::setType(MessageType type) {
+    m_messageType = type;
 }
 
-std::vector<char> Message::toBuffer() const {
-    uint32_t dataSize = htonl(static_cast<uint32_t>(m_messageData.size()));
-    std::vector<char> buffer(sizeof(dataSize) + m_messageData.size());
-    std::memcpy(buffer.data(), &dataSize, sizeof(dataSize));
-    std::memcpy(buffer.data() + sizeof(dataSize), m_messageData.data(), m_messageData.size());
-    return buffer;
+size_t Message::size() {
+    return sizeof(m_messageType) + m_messageData.size();
 }
 
-inline static Message fromBuffer(const std::vector<char> &buffer) {
-    if (buffer.size() < sizeof(uint32_t)) {
-        throw std::runtime_error("Invalid buffer size");
-    }
-    uint32_t dataSize;
-    std::memcpy(&dataSize, buffer.data(), sizeof(dataSize));
-    dataSize = ntohl(dataSize);
-    if (buffer.size() < sizeof(uint32_t) + dataSize) {
-        throw std::runtime_error("Incomplete message");
-    }
-    return Message(std::string(buffer.begin() + sizeof(uint32_t), buffer.begin() + sizeof(uint32_t) + dataSize));
+void Message::serialize(std::vector<char>& buffer) const {
+    buffer.push_back(static_cast<char>(m_messageType));
+    buffer.insert(buffer.end(), m_messageData.begin(), m_messageData.end());
+}
+
+Message Message::deserialize(const std::vector<char>& buffer) {
+    Message message;
+    message.m_messageType = static_cast<MessageType>(buffer[0]);
+    message.m_messageData = std::string(buffer.begin() + 1, buffer.end());
+    return message;
 }

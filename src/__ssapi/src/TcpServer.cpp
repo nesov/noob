@@ -2,22 +2,33 @@
 #include "ssapi/TcpServer.h"
 #include "ssapi/Message.h"
 #include <unistd.h>
+#include <thread>
 
 namespace ssapi {
 
-    TcpServer::TcpServer(int port) : m_serverFd(-1), m_port(port) {}
+    TcpServer::TcpServer(int port) : m_serverFd(-1), m_port(port) {
+        start();
+    }
+
+    TcpServer::~TcpServer() {
+        stop();
+    }
 
     bool TcpServer::TcpServer::start() {
         m_serverFd = socket(AF_INET, SOCK_STREAM, 0);
-        if (m_serverFd < 0) return false;
+        if (m_serverFd < 0) 
+            return false;
 
         sockaddr_in serverAddr{};
         serverAddr.sin_family = AF_INET;
         serverAddr.sin_port = htons(m_port);
         serverAddr.sin_addr.s_addr = INADDR_ANY;
 
-        if (bind(m_serverFd, (sockaddr *)&serverAddr, sizeof(serverAddr)) < 0) return false;
-        if (listen(m_serverFd, SOMAXCONN) < 0) return false;
+        if (bind(m_serverFd, (sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
+            return false;
+
+        if (listen(m_serverFd, SOMAXCONN) < 0) 
+            return false;
 
         std::thread([this] {
                 while (true) {
@@ -40,10 +51,11 @@ namespace ssapi {
         }
     }
 
-    bool TcpServer::sendMessage(const Message &message) {
+    bool TcpServer::sendMessage(Message &message) {
         std::lock_guard<std::mutex> lock(m_clientsMutex);
         for (int clientFd : m_clients) {
-            std::vector<char> buffer = message.toBuffer();
+            std::vector<char> buffer;
+            message.serialize(buffer);
             size_t totalSent = 0;
             size_t toSend = buffer.size();
 
@@ -77,10 +89,13 @@ namespace ssapi {
                 }
                 totalReceived += bytesRead;
             }
-            return Message::fromBuffer(buffer);
+            return Message::deserialize(buffer);
         }
         throw std::runtime_error("No clients connected or no message received");
         // return {"Error"};
+        // return nullptr
     }
  
  }//namespace ssapi
+
+

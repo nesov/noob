@@ -23,39 +23,39 @@ namespace ssapi {
             close(m_socketFd);
     }
 
-    bool TcpClient::sendMessage(const Message &message) {
-        std::vector<char> buffer = message.toBuffer();
-        size_t totalSent = 0;
-        size_t toSend = buffer.size();
+    bool TcpClient::sendMessage(Message &message) {
+        std::vector<char> buffer;
+        message.serialize(buffer);
+        size_t messageSize = buffer.size();
+        ssize_t bytesSent = send(m_socketFd, &messageSize, sizeof(messageSize), 0);
+        if (bytesSent < 0){
+            std::cerr << "Error sending size" << std::endl;
+            return false;
+        }
 
-        while (totalSent < toSend){
-            ssize_t sent = ::send(m_socketFd, buffer.data() + totalSent, toSend - totalSent, 0);
-            if (sent <= 0)
-                return false;
-            totalSent += sent;
+        bytesSent = send(m_socketFd, buffer.data(), buffer.size(), 0);
+        if (bytesSent < 0){
+            std::cerr << "Error sending data" << std::endl;
+            return false;
         }
         return true;
     }
 
     Message TcpClient::receiveMessage() {
-        uint32_t messageSize = 0;
-        ssize_t received = ::recv(m_socketFd, &messageSize, sizeof(messageSize), MSG_WAITALL);
-        if (received != sizeof(messageSize)) {
-            throw std::runtime_error("Connection closed or error on receive");
+        size_t messageSize = 0;
+        ssize_t bytesRead = recv(m_socketFd, &messageSize, sizeof(messageSize), 0);
+        if (bytesRead < 0) {
+            std::cerr << "Error receiving size" << std::endl;
+            return nullptr;
         }
-
-        messageSize = ntohl(messageSize);
         std::vector<char> buffer(messageSize);
-        size_t totalReceived = 0;
-
-        while (totalReceived < messageSize) {
-            ssize_t bytesRead = ::recv(m_socketFd, buffer.data() + totalReceived, messageSize - totalReceived, 0);
-            if (bytesRead <= 0) {
-                throw std::runtime_error("Connection closed or error on receive");
-            }
-            totalReceived += bytesRead;
+        bytesRead = recv(m_socketFd, buffer.data(), messageSize, 0);
+        if (bytesRead < 0) {
+            std::cerr << "Error receiving data" << std::endl;
+            return nullptr;
         }
-        return Message::fromBuffer(buffer);
+        // Message message = Message::deserialize(buffer);
+        return {Message::deserialize(buffer)};
     }
 
 } //namespace ssapi

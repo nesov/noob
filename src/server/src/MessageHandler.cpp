@@ -1,48 +1,37 @@
 #include <string>
-
-#include "MessageHandler.h"
-#include "JsonObject.h"
-#include "ssapi/Message.h"
 #include <iostream>
 
+#include "MessageHandler.h"
+#include "ssapi/Message.h"
 
-// JsonObject MessageHandler::handle(const JsonObject& message) {
-    
-//     std::lock_guard<std::mutex> lock(m_mtx);
-//     JsonObject response;
-//     try {
-//         std::string content = message.get("content");
+#include "proc/TaskProcessor_1.h"
 
-//         if (content == "Task1") {
-//             int a = std::stoi(message.get("a"));
-//             int b = std::stoi(message.get("b"));
-//             response.set("content", "Result: " + std::to_string(a + b));
-//         } else if (content == "Task2") {
-//             std::string text = message.get("text");
-//             std::transform(text.begin(), text.end(), text.begin(), ::toupper);
-//             response.set("content", text);
-//         } else {
-//             response.set("content", "Unknown task.");
-//         }
-//     } catch (const std::exception& e) {
-//         response.set("content", "Error: " + std::string(e.what()));
-//     }
-//     return response;
-// }
 
-Message MessageHandler::handle(Message& message) {
+
+Message MessageHandler::handle(const Message& message) {
     std::lock_guard<std::mutex> lock(m_mtx);
-    
-    int type = message.getType();
+    Message respMessage;
+    Data data, out;
 
-    switch(type) {
-        case 2:
-            taskProcessor = new TaskProcessor_1;
-            Data data = taskProcessor->execute();
+    switch (message.getType()) {
+        case MessageType::task1: {
+            std::unique_ptr<ITaskProcessor> taskProcessor = std::make_unique<TaskProcessor_1>();
+            data.StringData = message.getData();
+            out = taskProcessor->execute(data);
+            respMessage.setData(out.StringData.c_str());
+            respMessage.setType(MessageType::task1);
+            break;
+        }
+
+        case MessageType::echo:
+            respMessage = message;
             break;
 
         default:
-            std::cerr <<"Unsupported messge type\n";         
-      }
-      return {'\0',"error message"};
+            std::cerr << "Unsupported message type\n";
+            respMessage = "Unsupported message type\n";
+
+            break;
+    }
+    return respMessage;
 }

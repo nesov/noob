@@ -1,19 +1,18 @@
-
 #pragma once
 
 #include <mutex>
-#include "JsonObject.h"
-#include "Message.h"
-#include "ITaskProcessor.h"
+#include "ssapi/Message.h"
+#include "proc/ITaskProcessor.h"
 
 
 class MessageHandler {
     public:
-        JsonObject handle(const JsonObject& message);
-        Message    handle(const Message& message);
+        explicit MessageHandler() = default;
+        ~MessageHandler() = default;
+        Message handle(const Message& message);
             
     private:
-        ITaskProcessor* taskProcessor;
+        ITaskProcessor* m_taskProcessor;
         std::mutex m_mtx;
 };
     
