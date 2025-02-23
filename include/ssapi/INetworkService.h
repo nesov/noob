@@ -3,7 +3,7 @@
 
 class INetworkService {
  public:
-    virtual ~INetworkService();
+    virtual ~INetworkService() = default;
         
     virtual bool start() = 0;
     virtual void stop() = 0;
