@@ -1,7 +1,7 @@
 #include "ServerApplication.h"
 
 int main() {
-    ServerApplication application (8080);
+    ServerApplication application (9090);
     application.run();
     return 0;
 }

@@ -12,7 +12,7 @@ int main() {
         Message requestMessage (text.c_str());
         requestMessage.setType(MessageType::task2);
 
-        TcpClient* netclient = new TcpClient("127.0.0.1", 8080);
+        TcpClient* netclient = new TcpClient("127.0.0.1", 9090);
         netclient -> start();
         netclient -> sendMessage(requestMessage);
         Message responceMessage = netclient -> receiveMessage();

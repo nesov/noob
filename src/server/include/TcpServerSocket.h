@@ -32,6 +32,6 @@ class TcpServerSocket {
         int m_serverSocket;
         sockaddr_in m_serverAddr;
         bool m_isRunning;
-        std::mutex m_mtx;
-        std::condition_variable m_condition;
+        // std::mutex m_mtx;
+        // std::condition_variable m_condition;
 };

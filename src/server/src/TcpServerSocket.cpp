@@ -23,13 +23,13 @@ TcpServerSocket::~TcpServerSocket(){
 int TcpServerSocket::createServerSocket() {
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
-        std::cerr << "Error creating socket" << std::endl;
+        std::cout << "Error creating socket" << strerror(errno)<<std::endl;
         return -1;
     }
 
     int opt = 1;
     if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
-        std::cerr << "SO_REUSEADDR setting error\n";
+        std::cout << "SO_REUSEADDR setting error"<<strerror(errno)<<std::endl;
         m_isRunning = false;
         close(sock);
         return -1;
@@ -48,7 +48,7 @@ sockaddr_in TcpServerSocket::initServStruct(int port) {
 
 void TcpServerSocket::bindPort(int serverSocket, sockaddr_in& serverAddr ){
     if (bind(serverSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0) {
-        std::cerr << "Bind failed" << std::endl;
+        std::cout << "Bind failed" <<strerror(errno)<< std::endl;
         m_isRunning = false;
     }
     m_isRunning = true;
@@ -61,7 +61,7 @@ void TcpServerSocket::closeSocket(int socket) {
 
 void TcpServerSocket::listenConnections(){
     if(listen(m_serverSocket, 10) < 0)
-        std::cout<<"Fail to listen\n";
+        std::cout<<"Fail to listen: "<<strerror(errno)<<std::endl;
 }
 
 int TcpServerSocket::acceptConnection(){
@@ -70,7 +70,7 @@ int TcpServerSocket::acceptConnection(){
     // int clientSock = accept(m_serverSocket, (struct sockaddr*)&clientAddr, &clientLen);
     int clientSock = accept(m_serverSocket, nullptr, nullptr);
     if (clientSock < 0){ 
-        std::cout << "Accept failed\n"; 
+        std::cout << "Accept failed "<< strerror(errno)<<std::endl;
     }
     return clientSock;
 }
@@ -112,10 +112,10 @@ void TcpServerSocket::listenAndAcceptConnections(std::queue<std::pair<int, Messa
             Message incomingMessage = receiveMessage(clientSock);
        
             {
-                std::lock_guard<std::mutex> lock(m_mtx);
+                // std::lock_guard<std::mutex> lock(m_mtx);
                 clients.emplace(clientSock, incomingMessage);
             }
-            m_condition.notify_one();
+            // m_condition.notify_one();
             // need to lock somehow but not
 
             std::cout << "After adding to queue : " << incomingMessage << std::endl
@@ -127,12 +127,12 @@ void TcpServerSocket::listenAndAcceptConnections(std::queue<std::pair<int, Messa
 
 Message TcpServerSocket::receiveMessage(int clientSocket){
 
-    std::lock_guard<std::mutex> lock(m_mtx);
+    // std::lock_guard<std::mutex> lock(m_mtx);
 
     size_t messageSize = 0;
-    size_t bytesRead = recv(clientSocket, &messageSize, sizeof(messageSize), 0);
+    ssize_t bytesRead = recv(clientSocket, &messageSize, sizeof(messageSize), 0);
     if (bytesRead < 0) {
-        std::cerr << "Error receiving size" << std::endl;
+        std::cerr << "Error receiving size " <<strerror(errno)<< std::endl;
         return Message();
     }
     std::vector<char> buffer(messageSize);
@@ -147,15 +147,15 @@ Message TcpServerSocket::receiveMessage(int clientSocket){
 
 bool TcpServerSocket::sendMessage(int clientSocket, const Message& message) {
 
-    std::lock_guard<std::mutex> lock(m_mtx);
+    // std::lock_guard<std::mutex> lock(m_mtx);
 
     std::vector<char> buffer;
     message.serialize(buffer);
-    size_t msgSize = buffer.size();
+    size_t messageSize = buffer.size();
 
-    ssize_t bytesSent = send(clientSocket, &msgSize, sizeof(msgSize), 0);
+    ssize_t bytesSent = send(clientSocket, &messageSize, sizeof(messageSize), 0);
     if (bytesSent < 0) {
-        std::cerr << "Error sending size" << std::endl;
+        std::cerr << "Error sending size"<<strerror(errno)<< std::endl;
         return false;
     }
     bytesSent = send(clientSocket, buffer.data(), buffer.size(), 0);
@@ -163,6 +163,7 @@ bool TcpServerSocket::sendMessage(int clientSocket, const Message& message) {
         std::cerr << "Error sending data" << std::endl;
         return false;
     }
+    closeSocket(clientSocket);
     return true;
 }
 
