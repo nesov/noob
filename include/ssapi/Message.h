@@ -10,19 +10,19 @@ enum class MessageType {
 class Message {
     public:
         Message() = default;
-        // Message(const Message& other) = default;
-        // Message(Message&& other) = default;
+        Message(const Message& other) = default;
+        Message(Message&& other) = default;
         Message(const char* data); 
 
         friend std::ostream& operator<<(std::ostream& os, const Message& msg);
-        // friend void operator=(const Message& other);
+        Message& operator=(const Message& other) = default;
 
         MessageType getType() const;
         std::string getData() const;
 
         void setData(const char* data);
         void setType(MessageType type); 
-        size_t size() ;
+        size_t size();
 
         void serialize(std::vector<char>& buffer) const;
         static Message deserialize(const std::vector<char>& buffer);

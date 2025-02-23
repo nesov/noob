@@ -1,21 +1,40 @@
 #pragma once
 
+#include <thread>
+#include <vector>
+#include <queue>
+
 #include "MessageHandler.h"
 #include "ssapi/INetworkService.h"
 #include "ssapi/Message.h"
-
-#include <memory>
+#include "TcpServerSocket.h"
 
 class ServerApplication {
+    using MessagesQueue = std::queue<std::pair<int, Message>>;
+    using Workers       = std::vector<std::thread>;
+
  public:
     ServerApplication(int port);
     ~ServerApplication();
+    void run();
+
+private:
+
+    void listen();
     void serve();
+    // void listen(MessagesQueue& );
+    // void serve (MessagesQueue& );
 
- private:
-    // std::unique_ptr<MessageHandler*> m_messagehandler;
-    // std::unique_ptr<INetworkService*> m_networkService;
+    // void lock();
+    // void unlock();
 
-    MessageHandler* m_messagehandler;
-    INetworkService* m_networkService;
+    MessagesQueue       m_incomingMessages;
+
+    MessageHandler*     m_messageHandler;
+    TcpServerSocket*    m_networkService;
+    Workers             m_workers;
+
+
+    std::mutex m_mtx;
+    std::condition_variable m_condition;
 };

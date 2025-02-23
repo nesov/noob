@@ -1,8 +1,6 @@
 
 #include "ssapi/TcpClient.h"
 
-namespace ssapi {
-
     TcpClient::TcpClient(const std::string& ip, int port) 
                     : m_serverIp(ip), m_serverPort(port), m_socketFd(-1) {}
 
@@ -32,7 +30,6 @@ namespace ssapi {
             std::cerr << "Error sending size" << std::endl;
             return false;
         }
-
         bytesSent = send(m_socketFd, buffer.data(), buffer.size(), 0);
         if (bytesSent < 0){
             std::cerr << "Error sending data" << std::endl;
@@ -41,21 +38,38 @@ namespace ssapi {
         return true;
     }
 
-    Message TcpClient::receiveMessage() {
+    // Message TcpClient::receiveMessage() {
+    //     size_t messageSize = 0;
+    //     ssize_t bytesRead = recv(m_socketFd, &messageSize, sizeof(messageSize), 0);
+    //     if (bytesRead < 0) {
+    //         std::cerr << "Error receiving size" << std::endl;
+    //         return nullptr;
+    //     }
+    //     std::vector<char> buffer(messageSize);
+    //     bytesRead = recv(m_socketFd, buffer.data(), messageSize, 0);
+    //     if (bytesRead < 0) {
+    //         std::cerr << "Error receiving data" << std::endl;
+    //         return nullptr;
+    //     }
+    //     // Message message = Message::deserialize(buffer);
+    //     return {Message::deserialize(buffer)};
+    // }
+
+    Message TcpClient::receiveMessage(){
         size_t messageSize = 0;
-        ssize_t bytesRead = recv(m_socketFd, &messageSize, sizeof(messageSize), 0);
+        size_t bytesRead = recv(m_socketFd, &messageSize, sizeof(messageSize), 0);
         if (bytesRead < 0) {
             std::cerr << "Error receiving size" << std::endl;
-            return nullptr;
+            return Message();
         }
         std::vector<char> buffer(messageSize);
         bytesRead = recv(m_socketFd, buffer.data(), messageSize, 0);
         if (bytesRead < 0) {
             std::cerr << "Error receiving data" << std::endl;
-            return nullptr;
+            return Message();
         }
         // Message message = Message::deserialize(buffer);
-        return {Message::deserialize(buffer)};
+        // std::cout<<__LINE__<<message;
+        return Message::deserialize(buffer);
+        // return message;
     }
-
-} //namespace ssapi

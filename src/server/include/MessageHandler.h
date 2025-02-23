@@ -13,6 +13,6 @@ class MessageHandler {
             
     private:
         ITaskProcessor* m_taskProcessor;
-        std::mutex m_mtx;
+        // std::mutex m_mtx;
 };
     

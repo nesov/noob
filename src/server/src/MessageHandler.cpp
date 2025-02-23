@@ -9,28 +9,30 @@
 
 
 Message MessageHandler::handle(const Message& message) {
-    std::lock_guard<std::mutex> lock(m_mtx);
-    Message respMessage;
-    Data data, out;
+    // std::lock_guard<std::mutex> lock(m_mtx);
 
-    switch (message.getType()) {
-        case MessageType::task1: {
-            std::unique_ptr<ITaskProcessor> taskProcessor = std::make_unique<TaskProcessor_1>();
-            data.StringData = message.getData();
-            out = taskProcessor->execute(data);
-            respMessage.setData(out.StringData.c_str());
+    Message respMessage;
+    // Data data, out;
+    int type = static_cast<int> (message.getType());
+
+    switch (type) {
+        case 0: {
+            m_taskProcessor = new TaskProcessor_1;
+            std::string inData  = message.getData();
+            std::string outData = m_taskProcessor -> execute(inData);
+            
+            respMessage.setData(outData.c_str());
             respMessage.setType(MessageType::task1);
+            delete m_taskProcessor;
             break;
         }
 
-        case MessageType::echo:
+        case 99:
             respMessage = message;
             break;
 
         default:
-            std::cerr << "Unsupported message type\n";
             respMessage = "Unsupported message type\n";
-
             break;
     }
     return respMessage;

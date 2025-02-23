@@ -7,7 +7,7 @@
 #include "ssapi/Message.h"
 #include "ssapi/INetworkService.h"
 
-namespace ssapi {
+
     class TcpServer : public INetworkService {
     public:
         explicit TcpServer(int port);
@@ -24,4 +24,5 @@ namespace ssapi {
         std::mutex m_clientsMutex;
         std::vector<int> m_clients;
     };
-} //namespace ssapi
+
+

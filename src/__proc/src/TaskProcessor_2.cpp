@@ -5,11 +5,15 @@
 // double TaskProcessor_2::taskTwo(double a, double b) {
 //     return a + b;
 // }
-    Data TaskProcessor_2::execute(Data& data) {
-        Data outData;
-        outData.StringData = taskTwo(1,3);
-        return outData;
-    }
+    // Data TaskProcessor_2::execute(Data& data) {
+    //     Data outData;
+    //     outData.StringData = taskTwo(1,3);
+    //     return outData;
+    // }
+
+   std::string TaskProcessor_2::execute(std::string& ){
+
+   }
 
 
     // template<typename T>
