@@ -29,8 +29,8 @@ class Message {
         void serialize(std::vector<char>& buffer) const;
         static Message deserialize(const std::vector<char>& buffer);
 
-        // static void toBytes(const Message&, char*  );
-        // static void fromBytes(const char*, Message& ); 
+        static void toBytes(const Message&, char*  );
+        static void fromBytes(const char*, Message& ); 
         
 
     private:

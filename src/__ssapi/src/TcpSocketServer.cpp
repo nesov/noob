@@ -12,10 +12,6 @@ void TcpSocketServer::start() {
     m_network.Bind(m_port);
     m_network.SetSocketOptions();
     m_network.Listen();
-
-    while(true){
-        m_network.Accept();
-    }
 }
 
 void TcpSocketServer::stop() { 
@@ -24,17 +20,24 @@ void TcpSocketServer::stop() {
 
 
 bool TcpSocketServer::sendMessage(Message &message) {
+    std::cout << "Operation is not recommended for Server\n";
+    m_network.sendMessage(m_network.getSocket(), message);
     return true;
 }
 Message TcpSocketServer::receiveMessage() {
-    return Message();
+    std::cout << "Operation is not recommended for Server\n";
+    return m_network.receiveMessage(m_network.getSocket());
 }
 
 
-bool TcpSocketServer::sendMessage(int socket ,Message &message) {
+bool TcpSocketServer::sendMessage(int socket ,Message &message){
+    m_network.sendMessage(socket, message);
     return true;
 }
 Message TcpSocketServer::receiveMessage(int socket) {
-    return Message();
+    return m_network.receiveMessage(socket);
 }
 
+int TcpSocketServer::Accept(){
+   return m_network.Accept();
+}

@@ -7,6 +7,8 @@
 
 #include <iostream>
 
+#include "ssapi/Message.h"
+
 class SocketBase {
 public:
     SocketBase();
@@ -16,13 +18,17 @@ public:
     void Bind(int);
     void Listen();
     int Accept();
-    void Connect(const char *host, int port);
-    void Send(int socket, const char *data, size_t);
-    void Receive(int socket, char *data, size_t);
+    void Connect(const char* host, int port);
+    void Send(int socket, void *data, size_t);
+    void Receive(int socket, void *data, size_t);
     void Close();
     void Close(int);
 
     int getSocket();
+
+    Message receiveMessage(int socket);
+    bool sendMessage(int clientSocket, const Message& message);
+
 protected:
     int m_socket;
     sockaddr_in m_address;

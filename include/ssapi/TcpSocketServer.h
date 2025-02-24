@@ -3,6 +3,7 @@
 #include "ssapi/Message.h"
 #include "ssapi/INetworkService.h"
 #include "ssapi/SocketBase.h"
+#include "ssapi/IAcceptable.h"
 
 
 class TcpSocketServer : public INetworkService  {
@@ -16,8 +17,10 @@ public:
     bool sendMessage(Message &message) override;
     Message receiveMessage() override;
 
-    bool sendMessage(int socket, Message &message)override;
-    Message receiveMessage(int socket)override;
+    bool sendMessage(int socket, Message &message) override;
+    Message receiveMessage(int socket) override;
+
+    int Accept() override;
 
 private:
     SocketBase m_network;

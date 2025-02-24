@@ -65,7 +65,7 @@ void SocketBase::Connect(const char* host, int port){
     }
 }
 
-void SocketBase::Send(int socket, const char* data, size_t dataSize){
+void SocketBase::Send(int socket, void* data, size_t dataSize){
     ssize_t bytesSent = send(socket, &data, dataSize, 0);
     if (bytesSent < dataSize) {
         std::cout << "Sending failed : "<<strerror(errno)<< std::endl;
@@ -73,7 +73,7 @@ void SocketBase::Send(int socket, const char* data, size_t dataSize){
     }
 }
 
-void SocketBase::Receive(int socket, char* data, size_t dataSize) {
+void SocketBase::Receive(int socket, void* data, size_t dataSize) {
     ssize_t bytesReceive = recv(m_socket, &data, dataSize, 0);
     if (bytesReceive < dataSize) {
         std::cerr << "Error receiving data" <<strerror(errno)<<std::endl;
@@ -94,3 +94,25 @@ void SocketBase::Close(int socket){
 int SocketBase::getSocket(){
     return m_socket;
 }
+
+
+Message SocketBase::receiveMessage(int socket){
+    size_t messageSize = 0;
+    Receive(socket,&messageSize,sizeof(messageSize));
+    std::vector<char> buffer(messageSize);
+    Receive(socket, buffer.data(), messageSize);
+
+    return Message::deserialize(buffer);
+}
+
+bool SocketBase::sendMessage(int socket, const Message& message) {
+    std::vector<char> buffer;
+    message.serialize(buffer);
+    size_t messageSize = buffer.size();
+
+    Send(socket, &messageSize, sizeof(messageSize));
+    Send(socket, buffer.data(), buffer.size());
+
+    return true;
+}
+
