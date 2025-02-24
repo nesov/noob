@@ -23,10 +23,11 @@ Message MessageHandler::handle(const Message &message)
 
         std::string inData = message.getData();
         std::string outData = m_taskProcessor -> execute(inData);
-
-        respMessage.setData(outData.c_str());
-        respMessage.setType(MessageType::task1);
         
+        respMessage.setType(MessageType::task1);
+        respMessage.setData(outData.c_str());
+        
+
         delete m_taskProcessor;
     }
 

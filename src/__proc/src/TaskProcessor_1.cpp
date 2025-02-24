@@ -13,7 +13,19 @@
 // }
 
 std::string TaskProcessor_1::execute(std::string& data) {
+
+    //BUG: 
+    /*
+        1. send Alexandr
+        2. recieve Alexandr Niesov  - which is correct behaviour
+        3. send something other, like 111 for example 
+        AR: 
+            - recieve Alexandr Niesov
+        ER: 
+            - method adds " " space and returns     
+    */
     std::string result = taskOne(data.c_str());
+    
     return result;
 }
 
