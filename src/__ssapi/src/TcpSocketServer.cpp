@@ -30,7 +30,7 @@ Message TcpSocketServer::receiveMessage() {
 }
 
 
-bool TcpSocketServer::sendMessage(int socket ,Message &message){
+bool TcpSocketServer::sendMessage(int socket, Message &message){
     m_network.sendMessage(socket, message);
     return true;
 }

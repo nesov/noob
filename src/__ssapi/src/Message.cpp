@@ -8,6 +8,7 @@ std::ostream& operator<<(std::ostream &os, const Message& message) {
     os << static_cast<int>(message.m_messageType) << " : " << message.m_messageData << '\n';
     return os;
 }
+Message::Message(MessageType type, const std::string& data) : m_messageType(type), m_messageData(data) {}
 
 Message::Message(std::string& data) : m_messageType(MessageType::echo), m_messageData(data) {}
 

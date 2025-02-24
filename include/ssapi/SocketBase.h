@@ -20,7 +20,7 @@ public:
     void Listen();
     int Accept();
     void Connect(const char* host, int port);
-    void Send(int socket, void *data, size_t);
+    void Send(int socket, const void *data, size_t);
     void Receive(int socket, void *data, size_t);
     void Close();
     void Close(int);

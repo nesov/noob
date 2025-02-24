@@ -65,19 +65,17 @@ void SocketBase::Connect(const char* host, int port){
     }
 }
 
-void SocketBase::Send(int socket, void* data, size_t dataSize){
-    ssize_t bytesSent = send(socket, &data, dataSize, 0);
+void SocketBase::Send(int socket, const void* data, size_t dataSize){
+    ssize_t bytesSent = send(socket, data, dataSize, 0);
     if (bytesSent < dataSize) {
         std::cout << "Sending failed : "<<strerror(errno)<< std::endl;
-        Close();
     }
 }
 
 void SocketBase::Receive(int socket, void* data, size_t dataSize) {
-    ssize_t bytesReceive = recv(m_socket, &data, dataSize, 0);
+    ssize_t bytesReceive = recv(m_socket, data, dataSize, 0);
     if (bytesReceive < dataSize) {
         std::cerr << "Error receiving data" <<strerror(errno)<<std::endl;
-        Close();
     }
 }
 
@@ -95,40 +93,47 @@ int SocketBase::getSocket(){
     return m_socket;
 }
 
-
-// Message SocketBase::receiveMessage(int socket){
-//     size_t messageSize = 0;
-//     Receive(socket,&messageSize,sizeof(messageSize));
-//     std::vector<char> buffer(messageSize);
-//     Receive(socket, buffer.data(), messageSize);
-
-//     return Message::deserialize(buffer);
-// }
-
-// bool SocketBase::sendMessage(int socket, const Message& message) {
-//     std::vector<char> buffer;
-//     message.serialize(buffer);
-//     size_t messageSize = buffer.size();
-
-//     Send(socket, &messageSize, sizeof(messageSize));
-//     Send(socket, buffer.data(), buffer.size());
-
-//     return true;
-// }
-
-Message SocketBase::receiveMessage(int socket){
-    char buffer[kBufferSize] {0};
-    Receive(socket,&buffer,sizeof(buffer));
-    Message message;
-    Message::fromBytes(buffer, message);
-    return message;
-}
-
 bool SocketBase::sendMessage(int socket, const Message& message) {
-    char buffer[kBufferSize]{0};
-    Message::toBytes(message,buffer);
-    Send(socket, buffer, sizeof(buffer));
+    uint8_t type = static_cast<uint8_t>(message.getType());
+    uint32_t dataSize = message.getData().size();
+
+    // Send(socket, &type, sizeof(type));
+    // Send(socket, &dataSize, sizeof(dataSize));
+    // Send(socket, message.getData().c_str(), dataSize);
+
+    if (send(socket, &type, sizeof(type), 0) == -1) {
+        std::cerr << "Error receiving data" <<strerror(errno)<<std::endl;
+        return false;
+    }
+    if (send(socket, &dataSize, sizeof(dataSize), 0) == -1) {
+        std::cerr << "Error receiving data" <<strerror(errno)<<std::endl;
+        return false;
+    }
+    if (send(socket,message.getData().c_str(), dataSize, 0) == -1) {
+        std::cerr << "Error receiving data" <<strerror(errno)<<std::endl;
+        return false;
+    }
     return true;
 }
 
+Message SocketBase::receiveMessage(int socket) {
+    uint8_t type {0};
+    uint32_t dataSize{0};
+    
+    // Receive(socket, &type, sizeof(type));
+    // Receive(socket, &dataSize, sizeof(dataSize));
+    // std::string data(dataSize, '\0');
+    // Receive(socket, data.data(), sizeof(dataSize));
 
+    if (recv(socket, &type, sizeof(type), 0) <= 0) {
+        std::cerr << "Error receiving data" <<strerror(errno)<<std::endl;
+    }
+    if (recv(socket, &dataSize, sizeof(dataSize), 0) <= 0) {
+        std::cerr << "Error receiving data" <<strerror(errno)<<std::endl;
+    }
+    std::string data(dataSize, '\0');
+    if (recv(socket, data.data(), dataSize, 0) <= 0) {
+        std::cerr << "Error receiving data" <<strerror(errno)<<std::endl;
+    }
+    return Message(static_cast<MessageType>(type), data);
+}
