@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.31.3)
-project(final_work VERSION 1.0 LANGUAGES CXX)
+project(finalwork VERSION 1.0 LANGUAGES CXX)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 

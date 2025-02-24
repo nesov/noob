@@ -7,8 +7,8 @@
 
 class MessageHandler {
     public:
-        explicit MessageHandler() = default;
-        ~MessageHandler() = default;
+        MessageHandler() = default;
+        ~MessageHandler();
         Message handle(const Message& message);
             
     private:

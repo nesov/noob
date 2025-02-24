@@ -17,16 +17,12 @@ std::string TaskProcessor_1::execute(std::string& data) {
     return result;
 }
 
-
-
-
-
-char* TaskProcessor_1::taskOne(const char *name) {
+char* TaskProcessor_1::taskOne(const char* name) {
     /*
         1 Відправити з клієнта на сервер своє ім’я,
         на сервері додати до імені своє прізвище та відпрарезультат на клієнт.
     */
-    static char result[20] = "";
+    static char result[20] = " ";
     const char *firstName = "Alexandr";
 
     if (strcmp(name, firstName) == 0) {

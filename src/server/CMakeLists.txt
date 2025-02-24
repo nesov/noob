@@ -1,7 +1,7 @@
 
 set(TARGET_NAME tcp_server)
 set(SOURCE_DIR src/main.cpp 
-                # src/MessageHandler.cpp
+                src/MessageHandler.cpp
                 # src/TcpServerSocket.cpp
                 # src/ServerApplication.cpp
                 )

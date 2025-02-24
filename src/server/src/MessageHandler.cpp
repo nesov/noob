@@ -6,10 +6,15 @@
 
 #include "proc/TaskProcessor_1.h"
 
+MessageHandler::~MessageHandler(){
+    if (m_taskProcessor) {
+        delete m_taskProcessor;
+    }
+}
+
 
 
 Message MessageHandler::handle(const Message& message) {
-    // std::lock_guard<std::mutex> lock(m_mtx);
 
     Message respMessage;
     // Data data, out;
