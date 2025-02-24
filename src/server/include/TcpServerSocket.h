@@ -16,6 +16,7 @@ class TcpServerSocket {
         Message receiveMessage(int clientSocket);
         bool sendMessage(int clientSocket, const Message& message);
         int acceptConnection();
+        void listenAndAcceptConnections(std::queue<std::pair<int, Message>>& clients);
 
     private:
         //methods
@@ -26,7 +27,7 @@ class TcpServerSocket {
 
         void listenConnections();
         void listenAndAcceptConnections(int serverSocket, std::queue<std::pair<int, Message>> &clients);
-        void listenAndAcceptConnections(std::queue<std::pair<int, Message>>& clients);
+        // void listenAndAcceptConnections(std::queue<std::pair<int, Message>>& clients);
 
         // fields
         int m_serverSocket;

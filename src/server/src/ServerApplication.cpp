@@ -1,8 +1,6 @@
 
 #include "ServerApplication.h"
 
-
-
 ServerApplication::ServerApplication(const int port) {
     m_networkService = new TcpServerSocket(port);
 }
@@ -40,11 +38,12 @@ void ServerApplication::serve(){
 
 void ServerApplication::listen(){
     while (true) {
-        int connection = m_networkService -> acceptConnection();
-        Message incomingMessage = m_networkService -> receiveMessage(connection);
+        m_networkService -> listenAndAcceptConnections(m_incomingMessages);
+        // int connection = m_networkService -> acceptConnection();
+        // Message incomingMessage = m_networkService -> receiveMessage(connection);
         {
             std::lock_guard<std::mutex> lock(m_mtx);
-            m_incomingMessages.emplace(connection, incomingMessage);
+            // m_incomingMessages.emplace(connection, incomingMessage);
         }
         m_condition.notify_one();
     }

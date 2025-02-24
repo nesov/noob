@@ -24,6 +24,7 @@ int TcpServerSocket::createServerSocket() {
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
         std::cout << "Error creating socket" << strerror(errno)<<std::endl;
+        close(sock);
         return -1;
     }
 
@@ -31,7 +32,7 @@ int TcpServerSocket::createServerSocket() {
     if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
         std::cout << "SO_REUSEADDR setting error"<<strerror(errno)<<std::endl;
         m_isRunning = false;
-        close(sock);
+        closeSocket(sock);
         return -1;
     }
     return sock;
@@ -49,6 +50,7 @@ sockaddr_in TcpServerSocket::initServStruct(int port) {
 void TcpServerSocket::bindPort(int serverSocket, sockaddr_in& serverAddr ){
     if (bind(serverSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0) {
         std::cout << "Bind failed" <<strerror(errno)<< std::endl;
+        closeSocket(m_serverSocket);
         m_isRunning = false;
     }
     m_isRunning = true;
@@ -56,12 +58,16 @@ void TcpServerSocket::bindPort(int serverSocket, sockaddr_in& serverAddr ){
 
 void TcpServerSocket::closeSocket(int socket) {
     m_isRunning = false;
-    close (socket);
+    shutdown(socket,SHUT_RDWR);
+    close(socket);
 }
 
 void TcpServerSocket::listenConnections(){
-    if(listen(m_serverSocket, 10) < 0)
+    if(listen(m_serverSocket, 10) < 0){
         std::cout<<"Fail to listen: "<<strerror(errno)<<std::endl;
+        closeSocket(m_serverSocket);
+    }
+        
 }
 
 int TcpServerSocket::acceptConnection(){
@@ -71,6 +77,7 @@ int TcpServerSocket::acceptConnection(){
     int clientSock = accept(m_serverSocket, nullptr, nullptr);
     if (clientSock < 0){ 
         std::cout << "Accept failed "<< strerror(errno)<<std::endl;
+        closeSocket(clientSock);
     }
     return clientSock;
 }
@@ -81,10 +88,12 @@ void TcpServerSocket::listenAndAcceptConnections(int serverSocket, std::queue<st
     std::cout << "Waiting for connections..." << std::endl;
     while (true) {
         sockaddr_in clientAddr{};
+        std::memset(&clientAddr,0,sizeof(sockaddr_in));
         socklen_t clientLen = sizeof(clientAddr);
         int clientSock = accept(m_serverSocket, (struct sockaddr*)&clientAddr, &clientLen);
         if (clientSock < 0){
             std::cout << "Accept failed" << std::endl;
+            closeSocket(clientSock);
             continue;
         } else {
             Message incomingMessage = receiveMessage(clientSock);
@@ -104,9 +113,9 @@ void TcpServerSocket::listenAndAcceptConnections(std::queue<std::pair<int, Messa
         sockaddr_in clientAddr{};
         socklen_t clientLen = sizeof(clientAddr);
         int clientSock = accept(m_serverSocket, (struct sockaddr*)&clientAddr, &clientLen);
-        // = accept(m_serverSocket, nullptr, nullptr);
         if (clientSock < 0){
-            std::cout << "Accept failed" << std::endl;
+            std::cout << "Accept failed!!!!" << std::endl;
+            closeSocket(clientSock);
             continue;
         } else {
             Message incomingMessage = receiveMessage(clientSock);
@@ -133,12 +142,14 @@ Message TcpServerSocket::receiveMessage(int clientSocket){
     ssize_t bytesRead = recv(clientSocket, &messageSize, sizeof(messageSize), 0);
     if (bytesRead < 0) {
         std::cerr << "Error receiving size " <<strerror(errno)<< std::endl;
+        closeSocket(clientSocket);
         return Message();
     }
     std::vector<char> buffer(messageSize);
     bytesRead = recv(clientSocket, buffer.data(), messageSize, 0);
     if (bytesRead < 0) {
         std::cerr << "Error receiving data" << std::endl;
+        closeSocket(clientSocket);
         return Message();
     } 
     return Message::deserialize(buffer);
@@ -156,11 +167,13 @@ bool TcpServerSocket::sendMessage(int clientSocket, const Message& message) {
     ssize_t bytesSent = send(clientSocket, &messageSize, sizeof(messageSize), 0);
     if (bytesSent < 0) {
         std::cerr << "Error sending size"<<strerror(errno)<< std::endl;
+        closeSocket(clientSocket);
         return false;
     }
     bytesSent = send(clientSocket, buffer.data(), buffer.size(), 0);
     if (bytesSent < 0) {
-        std::cerr << "Error sending data" << std::endl;
+        std::cerr << "Error sending data"<<strerror(errno) << std::endl;
+        closeSocket(clientSocket);
         return false;
     }
     closeSocket(clientSocket);

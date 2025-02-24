@@ -1,8 +1,9 @@
 #pragma once
+
 #include <string>
 
-struct Data {
-    int IntegerData;
-    bool BoolData;
-    std::string StringData;
+union Data {
+    int i;
+    bool b;
+    char s[2048];
 };

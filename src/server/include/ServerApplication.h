@@ -29,6 +29,7 @@ private:
     // void unlock();
 
     MessagesQueue       m_incomingMessages;
+    // std::queue<std::pair<int, Message>>& m_incomingMessages;
 
     MessageHandler*     m_messageHandler;
     TcpServerSocket*    m_networkService;

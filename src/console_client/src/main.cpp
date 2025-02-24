@@ -1,26 +1,40 @@
 
 #include <iostream>
 
-#include <ssapi/TcpClient.h>
+#include <ssapi/TcpSocketClient.h>
+
+
+
 
 int main() {
+
+    // INetworkService* service = new TcpSocketClient(kHost, kPort);
+
+    TcpSocketClient service("127.0.0.1", 8080);
+
     while(true){
+        service.start();
         std::cout<< "Enter message text: "<<std::endl;
         std::string text;
         getline(std::cin, text);
+        service.stop();
+        if (text.compare("exit") == 0) {
+            break;
+        }
+           
 
-        Message requestMessage (text.c_str());
-        requestMessage.setType(MessageType::task2);
+        // Message requestMessage (text.c_str());
+        // requestMessage.setType(MessageType::task2);
 
-        TcpClient* netclient = new TcpClient("127.0.0.1", 9090);
-        netclient -> start();
-        netclient -> sendMessage(requestMessage);
-        Message responceMessage = netclient -> receiveMessage();
-        netclient -> stop();
-        delete netclient;
-        std::cout<<"Responce Message"<< responceMessage<< std::endl;
+        // TcpClient* netclient = new TcpClient("127.0.0.1", 9090);
+        // netclient -> start();
+        // netclient -> sendMessage(requestMessage);
+        // Message responceMessage = netclient -> receiveMessage();
+        // netclient -> stop();
+        // delete netclient;
+        // std::cout<<"Responce Message"<< responceMessage<< std::endl;
      }
-    
-    // std::cout<<"Hello world form console client"<<std::endl;
+     
+
     return 0;
 }

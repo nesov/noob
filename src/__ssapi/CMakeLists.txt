@@ -1,11 +1,12 @@
 
 set(TARGET ssapi)
-set(SOURCE_DIR  src/TcpClient.cpp 
-                src/TcpServer.cpp 
+set(SOURCE_DIR  
+                src/TcpSocketClient.cpp 
+                src/TcpSocketServer.cpp 
+                src/SocketBase.cpp
                 src/Message.cpp
-                src/Data.cpp)
-                # src/INetworkService.cpp)
-
+                src/INetworkService.cpp
+    )
 
 
 add_library(${TARGET} SHARED ${SOURCE_DIR})
