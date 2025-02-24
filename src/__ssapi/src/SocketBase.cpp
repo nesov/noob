@@ -96,23 +96,39 @@ int SocketBase::getSocket(){
 }
 
 
-Message SocketBase::receiveMessage(int socket){
-    size_t messageSize = 0;
-    Receive(socket,&messageSize,sizeof(messageSize));
-    std::vector<char> buffer(messageSize);
-    Receive(socket, buffer.data(), messageSize);
+// Message SocketBase::receiveMessage(int socket){
+//     size_t messageSize = 0;
+//     Receive(socket,&messageSize,sizeof(messageSize));
+//     std::vector<char> buffer(messageSize);
+//     Receive(socket, buffer.data(), messageSize);
 
-    return Message::deserialize(buffer);
+//     return Message::deserialize(buffer);
+// }
+
+// bool SocketBase::sendMessage(int socket, const Message& message) {
+//     std::vector<char> buffer;
+//     message.serialize(buffer);
+//     size_t messageSize = buffer.size();
+
+//     Send(socket, &messageSize, sizeof(messageSize));
+//     Send(socket, buffer.data(), buffer.size());
+
+//     return true;
+// }
+
+Message SocketBase::receiveMessage(int socket){
+    char buffer[kBufferSize] {0};
+    Receive(socket,&buffer,sizeof(buffer));
+    Message message;
+    Message::fromBytes(buffer, message);
+    return message;
 }
 
 bool SocketBase::sendMessage(int socket, const Message& message) {
-    std::vector<char> buffer;
-    message.serialize(buffer);
-    size_t messageSize = buffer.size();
-
-    Send(socket, &messageSize, sizeof(messageSize));
-    Send(socket, buffer.data(), buffer.size());
-
+    char buffer[kBufferSize]{0};
+    Message::toBytes(message,buffer);
+    Send(socket, buffer, sizeof(buffer));
     return true;
 }
+
 

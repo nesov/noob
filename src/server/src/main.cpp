@@ -9,11 +9,15 @@ int main() {
 
     // INetworkService* service = new TcpSocketServer(8080);
 
+    Message respMessage {"Resp from server"};
+
     INetworkService* service = new TcpSocketServer(8080);
     service -> start();
     while(true){
         int connection = service -> Accept();
-        std::cout<<"Incoming connection : "<<connection;
+        Message incomingMessage =  service -> receiveMessage(connection);
+        std::cout<<"Incoming Message : "<<incomingMessage;
+        service -> sendMessage(respMessage);
     }
     
 

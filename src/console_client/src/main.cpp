@@ -16,23 +16,15 @@ int main() {
         std::cout<< "Enter message text: "<<std::endl;
         std::string text;
         getline(std::cin, text);
-        std::cout<< "\r";
+
+        Message toSend(text.c_str());
+        service-> sendMessage(toSend);
+        Message fromServ = service-> receiveMessage();
+        std::cout<<"Server responce: "<< fromServ;
         service-> stop();
         if (text.compare("exit") == 0) {
             break;
         }
-           
-
-        // Message requestMessage (text.c_str());
-        // requestMessage.setType(MessageType::task2);
-
-        // TcpClient* netclient = new TcpClient("127.0.0.1", 9090);
-        // netclient -> start();
-        // netclient -> sendMessage(requestMessage);
-        // Message responceMessage = netclient -> receiveMessage();
-        // netclient -> stop();
-        // delete netclient;
-        // std::cout<<"Responce Message"<< responceMessage<< std::endl;
      }
      delete service;
 
