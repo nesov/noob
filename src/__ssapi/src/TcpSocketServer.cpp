@@ -23,10 +23,10 @@ void TcpSocketServer::stop() {
 }
 
 
-// bool TcpSocketServer::sendMessage(Message &message) {
-//     return true;
-// }
-// Message TcpSocketServer::receiveMessage() {
-//     return Message();
-// }
+bool TcpSocketServer::sendMessage(Message &message) {
+    return true;
+}
+Message TcpSocketServer::receiveMessage() {
+    return Message();
+}
 

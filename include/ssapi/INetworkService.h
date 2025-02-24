@@ -4,8 +4,7 @@
 
 class INetworkService {
  public:
-    virtual ~INetworkService();
-
+    virtual ~INetworkService() = default;
     virtual void start() = 0;
     virtual void stop() = 0;
     virtual bool sendMessage(Message& message) = 0 ;

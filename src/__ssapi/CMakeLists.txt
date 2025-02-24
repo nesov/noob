@@ -5,7 +5,6 @@ set(SOURCE_DIR
                 src/TcpSocketServer.cpp 
                 src/SocketBase.cpp
                 src/Message.cpp
-                src/INetworkService.cpp
     )
 
 

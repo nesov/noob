@@ -76,7 +76,7 @@ void SocketBase::Send(int socket, const char* data, size_t dataSize){
 void SocketBase::Receive(int socket, char* data, size_t dataSize) {
     ssize_t bytesReceive = recv(m_socket, &data, dataSize, 0);
     if (bytesReceive < dataSize) {
-        std::cerr << "Error receiving data" << std::endl;
+        std::cerr << "Error receiving data" <<strerror(errno)<<std::endl;
         Close();
     }
 }

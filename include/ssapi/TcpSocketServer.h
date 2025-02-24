@@ -5,16 +5,16 @@
 #include "ssapi/SocketBase.h"
 
 
-class TcpSocketServer {
+class TcpSocketServer : public INetworkService  {
 public:
     TcpSocketServer(int port);
     ~TcpSocketServer();
 
-    void start()  ;
-    void stop() ;
+    void start() override;
+    void stop() override;
 
-    // bool sendMessage(Message &message) ;
-    // Message receiveMessage() ;
+    bool sendMessage(Message &message) override;
+    Message receiveMessage() override;
 
 private:
     SocketBase m_network;

@@ -1,23 +1,22 @@
 
 #include <iostream>
 
-#include <ssapi/TcpSocketClient.h>
+#include "ssapi/TcpSocketClient.h"
+#include "ssapi/INetworkService.h"
 
 
 
 
 int main() {
 
-    // INetworkService* service = new TcpSocketClient(kHost, kPort);
-
-    TcpSocketClient service("127.0.0.1", 8080);
+    INetworkService* service = new TcpSocketClient("127.0.0.1", 8080);
 
     while(true){
-        service.start();
+        service-> start();
         std::cout<< "Enter message text: "<<std::endl;
         std::string text;
         getline(std::cin, text);
-        service.stop();
+        service-> stop();
         if (text.compare("exit") == 0) {
             break;
         }
@@ -34,7 +33,7 @@ int main() {
         // delete netclient;
         // std::cout<<"Responce Message"<< responceMessage<< std::endl;
      }
-     
+     delete service;
 
     return 0;
 }

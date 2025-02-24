@@ -8,8 +8,10 @@ int main() {
 
     // INetworkService* service = new TcpSocketServer(8080);
 
-    TcpSocketServer service(8080);
-    service.start();
+    INetworkService* service = new TcpSocketServer(8080);
+    
+
+    service -> start();
     // service -> stop();
 
     return 0;

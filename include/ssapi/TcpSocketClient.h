@@ -7,16 +7,16 @@
 #include <string>
 
 
-class TcpSocketClient{ 
+class TcpSocketClient : public INetworkService { 
 public:
     TcpSocketClient(std::string host, int port);
     ~TcpSocketClient();
 
-    void start()  ;
-    void stop()  ;
+    void start() override;
+    void stop() override;
 
-    // bool sendMessage(Message &message) ;
-    // Message receiveMessage()  ;
+    bool sendMessage(Message &message) override;
+    Message receiveMessage() override ;
    
 private:
     SocketBase m_network;

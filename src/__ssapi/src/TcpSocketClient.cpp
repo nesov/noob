@@ -14,14 +14,11 @@ void TcpSocketClient::stop(){
     m_network.Close();
 }
 
-// bool TcpSocketClient::sendMessage(Message &message) {
-//     // int socket = m_network.getSocket();
-//     // int messageSize = message.size();
-//     // m_network.Send(socket,(char* )&messageSize, messageSize);
-//     // m_network.Send(socket,message.)
-//     return true;
-// }
-// Message TcpSocketClient::receiveMessage() {
-//     return Message();
-// }
+bool TcpSocketClient::sendMessage(Message &message) {
+   
+    return true;
+}
+Message TcpSocketClient::receiveMessage() {
+    return Message();
+}
 
