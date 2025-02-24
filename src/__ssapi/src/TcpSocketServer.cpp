@@ -30,3 +30,11 @@ Message TcpSocketServer::receiveMessage() {
     return Message();
 }
 
+
+bool TcpSocketServer::sendMessage(int socket ,Message &message) {
+    return true;
+}
+Message TcpSocketServer::receiveMessage(int socket) {
+    return Message();
+}
+

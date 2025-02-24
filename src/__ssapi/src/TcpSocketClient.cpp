@@ -1,6 +1,7 @@
 
 #include "ssapi/TcpSocketClient.h"
 
+
 TcpSocketClient::TcpSocketClient(std::string host, int port) : m_host(host), m_port(port){ }
 
 TcpSocketClient::~TcpSocketClient(){}
@@ -21,4 +22,12 @@ bool TcpSocketClient::sendMessage(Message &message) {
 Message TcpSocketClient::receiveMessage() {
     return Message();
 }
+
+bool TcpSocketClient::sendMessage(int socket ,Message &message) {
+    return true;
+}
+Message TcpSocketClient::receiveMessage(int socket) {
+    return Message();
+}
+
 

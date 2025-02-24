@@ -17,7 +17,11 @@ public:
 
     bool sendMessage(Message &message) override;
     Message receiveMessage() override ;
-   
+
+    bool sendMessage(int socket, Message &message);
+
+    Message receiveMessage(int socket);
+
 private:
     SocketBase m_network;
     std::string m_host;
