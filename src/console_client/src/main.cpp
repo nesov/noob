@@ -16,6 +16,7 @@ int main() {
         std::cout<< "Enter message text: "<<std::endl;
         std::string text;
         getline(std::cin, text);
+        std::cout<< "\r";
         service-> stop();
         if (text.compare("exit") == 0) {
             break;

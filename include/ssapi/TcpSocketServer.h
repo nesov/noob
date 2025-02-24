@@ -16,8 +16,8 @@ public:
     bool sendMessage(Message &message) override;
     Message receiveMessage() override;
 
-    bool sendMessage(int socket, Message &message);
-    Message receiveMessage(int socket);
+    bool sendMessage(int socket, Message &message)override;
+    Message receiveMessage(int socket)override;
 
 private:
     SocketBase m_network;
