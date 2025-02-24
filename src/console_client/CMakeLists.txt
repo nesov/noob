@@ -1,5 +1,5 @@
 
-set(TARGET_NAME console_client)
+set(TARGET_NAME _console_client)
 
 set(SOURCE_DIR src/main.cpp
 

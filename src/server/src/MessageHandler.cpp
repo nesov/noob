@@ -12,33 +12,36 @@ MessageHandler::~MessageHandler(){
     }
 }
 
-
-
-Message MessageHandler::handle(const Message& message) {
-
+Message MessageHandler::handle(const Message &message)
+{
     Message respMessage;
-    // Data data, out;
-    int type = static_cast<int> (message.getType());
+    switch (message.getType())
+    {
+    case MessageType::task1:
+    {
+        m_taskProcessor = new TaskProcessor_1;
 
-    switch (type) {
-        case 0: {
-            m_taskProcessor = new TaskProcessor_1;
-            std::string inData  = message.getData();
-            std::string outData = m_taskProcessor -> execute(inData);
-            
-            respMessage.setData(outData.c_str());
-            respMessage.setType(MessageType::task1);
-            delete m_taskProcessor;
-            break;
-        }
+        std::string inData = message.getData();
+        std::string outData = m_taskProcessor -> execute(inData);
 
-        case 99:
-            respMessage = message;
-            break;
+        respMessage.setData(outData.c_str());
+        respMessage.setType(MessageType::task1);
+        
+        delete m_taskProcessor;
+    }
 
-        default:
-            respMessage = "Unsupported message type\n";
-            break;
+    break;
+    case MessageType::task2:
+        respMessage = "task2";
+        break;
+
+    case MessageType::echo:
+        respMessage = message;
+        break;
+
+    default:
+        respMessage = "Unsupported message type\n";
+        break;
     }
     return respMessage;
 }
