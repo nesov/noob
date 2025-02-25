@@ -1,41 +1,40 @@
-// #pragma once
+#pragma once
 
-// #include <thread>
-// #include <vector>
-// #include <queue>
+#include <fcntl.h>
+#include <sys/file.h>
+#include <unistd.h>
 
-// #include "MessageHandler.h"
-// #include "ssapi/INetworkService.h"
-// #include "ssapi/Message.h"
-// #include "TcpServerSocket.h"
+#include <vector>
+#include <iostream>
+#include <thread>
 
-// class ServerApplication {
-//     using MessagesQueue = std::queue<std::pair<int, Message>>;
-//     using Workers       = std::vector<std::thread>;
+#include "ssapi/INetworkService.h"
+#include "ssapi/TcpSocketServer.h"
+#include "ssapi/Message.h"
 
-//  public:
-//     ServerApplication(int port);
-//     ~ServerApplication();
-//     void run();
-
-// private:
-
-//     void listen();
-//     void serve();
-//     // void listen(MessagesQueue& );
-//     // void serve (MessagesQueue& );
-
-//     // void lock();
-//     // void unlock();
-
-//     MessagesQueue       m_incomingMessages;
-//     // std::queue<std::pair<int, Message>>& m_incomingMessages;
-
-//     MessageHandler*     m_messageHandler;
-//     TcpServerSocket*    m_networkService;
-//     Workers             m_workers;
+#include "MessageHandler.h"
+#include "MessageQueue.h"
+#include "ServerConsts.h"
 
 
-//     std::mutex m_mtx;
-//     std::condition_variable m_condition;
-// };
+
+
+class ServerApplication {
+ public:
+    ServerApplication(int port);
+    ~ServerApplication();
+    void run();
+
+ private:
+    void listen();
+    void serve();
+
+    void lock();
+    void unlock();
+
+    MessageHandler*     m_messageHandler;
+    INetworkService*    m_networkService;
+    MessageQueue<std::pair<int, Message> > m_queue;
+    std::vector <std::thread> m_workers;
+    int m_lock;
+};

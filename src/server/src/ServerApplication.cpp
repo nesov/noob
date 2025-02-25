@@ -1,85 +1,84 @@
 
-// #include "ServerApplication.h"
-
-// ServerApplication::ServerApplication(const int port) {
-//     m_networkService = new TcpServerSocket(port);
-// }
+#include "ServerApplication.h"
 
 
-// ServerApplication::~ServerApplication() {
-//     for (auto& worker : m_workers) {
-//         if (worker.joinable()) {
-//             worker.join();
-//         }
-//     }
-//     if (m_networkService) delete m_networkService;
-// }
+ServerApplication::ServerApplication(const int port) {
+    lock();
+    m_messageHandler = new MessageHandler;
+    m_networkService = new TcpSocketServer(port);
+    m_networkService -> start();
+}
+
+ServerApplication::~ServerApplication() {
+    for (auto& worker : m_workers) {
+        if (worker.joinable()) {
+            worker.join();
+        }
+        this -> unlock();
+    }
+    m_networkService -> stop();
+
+    if (m_networkService) {
+        delete m_networkService;
+        m_networkService = nullptr;
+    }
+    if (m_messageHandler) {
+        delete m_messageHandler;
+        m_messageHandler = nullptr;
+    }
+ }
+
+void ServerApplication::serve(){
+    while (true) {
+        std::pair<int, Message> itemsToHandle = m_queue.waitAndPop();
+        Message responceMessage = m_messageHandler->handle(itemsToHandle.second);
+        m_networkService -> sendMessage(itemsToHandle.first, responceMessage);
+
+        std::cout<<"Inc Message : "<< itemsToHandle.second <<std::endl;
+        std::cout<<"Out Message : "<< responceMessage <<std::endl;;
+    }
+}
 
 
-// void ServerApplication::serve(){
-//     while (true) {
-//         std::unique_lock<std::mutex> lock(m_mtx);
-//         m_condition.wait(lock, [this]() { return !m_incomingMessages.empty(); });
+void ServerApplication::listen(){
+    while (true) {
+        int connection = m_networkService->Accept();
+        Message incomingMessage  = m_networkService -> receiveMessage(connection);
+        m_queue.push({connection, incomingMessage});
+    }
+}
 
-//         int client = m_incomingMessages.front().first;
-//         Message inMessage = m_incomingMessages.front().second;
+void ServerApplication::run(){
+    m_workers.emplace_back([&]() { listen();});
+    m_workers.emplace_back([&]() { serve(); }); 
 
-//         m_incomingMessages.pop();
+    // for (auto& worker : m_workers) {
+    //     if (worker.joinable()) {
+    //         worker.join();
+    //     }
+    // }
+}
 
-//         lock.unlock();
+void ServerApplication::lock() {
+    m_lock = open(fileToLock, O_CREAT | O_RDWR, 0666);
+    if (m_lock == -1) {
+        std::cerr << "Server is already runnig!\n";
+        exit(EXIT_FAILURE);
+    }
 
-//         m_messageHandler = new MessageHandler;
-//         Message outMessage = m_messageHandler -> handle(inMessage);
-//         m_networkService -> sendMessage(client, outMessage);
-//         delete m_messageHandler;
-//     }
-// }
+    if (flock(m_lock, LOCK_EX | LOCK_NB) == -1){
+        std::cerr << "Server is already runnig!\n";
+        close(m_lock);
+        exit(EXIT_FAILURE);
+    }
+}
 
-
-// void ServerApplication::listen(){
-//     while (true) {
-//         m_networkService -> listenAndAcceptConnections(m_incomingMessages);
-//         // int connection = m_networkService -> acceptConnection();
-//         // Message incomingMessage = m_networkService -> receiveMessage(connection);
-//         {
-//             std::lock_guard<std::mutex> lock(m_mtx);
-//             // m_incomingMessages.emplace(connection, incomingMessage);
-//         }
-//         m_condition.notify_one();
-//     }
-// }
-
-// void ServerApplication::run(){
-//     m_workers.emplace_back([&]() { listen();}).detach();
-//     m_workers.emplace_back([&]() { serve(); }).detach(); 
-// }
-
-
-
-
-
-// // void ServerApplication::lock(){
-// //     int lockFile = open ("/tmp/server.lock", O_CREAT | O_RDWR, 0666);
-// //     if (lockFile == -1) {
-// //         std::cerr << "openr";
-// //         // return 1;
-// //     }
-
-// //     if (flock(lockFile, LOCK_EX | LOCK_NB) == -1) {
-// //         std::cerr << "Программа уже запущена!\n";
-// //         close(lockFile);
-// //         // return 1;
-// //     }
-
-
-    
-// // }
-
-// // Message ServerApplication::customHandler(const Message& messageIn) {
-// //     Message messageOut = m_messageHandler -> handle(messageIn);
-// //     return messageOut;
-// // }
-
-
+void ServerApplication::unlock() {
+    if (m_lock != -1) {
+        flock(m_lock, LOCK_UN);
+        close(m_lock);
+        unlink(fileToLock);
+    }
+}
 
 

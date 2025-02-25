@@ -1,6 +1,5 @@
 #pragma once
 
-#include <mutex>
 #include "ssapi/Message.h"
 #include "proc/ITaskProcessor.h"
 

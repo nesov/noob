@@ -4,7 +4,7 @@
 void SocketBase::Socket(){
     m_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (m_socket < 0) {
-        std::cout << "Socket: " << strerror(errno)<< std::endl;
+        std::cerr << "Socket: " << strerror(errno)<< std::endl;
         Close();
     }
 }
@@ -12,7 +12,7 @@ void SocketBase::Socket(){
 void SocketBase::SetSocketOptions(){
     int opt = 1;
     if (setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
-        std::cout << "Set Socket Options: "<< strerror(errno)<<std::endl;
+        std::cerr << "Set Socket Options: "<< strerror(errno)<<std::endl;
         Close();
     }
 }
@@ -24,14 +24,14 @@ void SocketBase::Bind(int port) {
     m_address.sin_addr.s_addr = INADDR_ANY;
 
     if (bind(m_socket, (struct sockaddr *)&m_address, sizeof(m_address)) < 0) {
-            std::cout << "Bind: " << strerror(errno)<< std::endl;
+            std::cerr << "Bind: " << strerror(errno)<< std::endl;
             Close();
     }
 }
 
 void SocketBase::Listen(){
     if(listen(m_socket, SOMAXCONN) < 0){
-        std::cout<<"Listen: "<<strerror(errno)<<std::endl;
+        std::cerr<<"Listen: "<<strerror(errno)<<std::endl;
         Close();
     }
 }
@@ -48,7 +48,7 @@ int SocketBase::Accept(){
         close(clientSock);
         return -1;     
     } 
-    // identifyConnection(clientSock);
+    identifyConnection(clientSock);
     return clientSock;   
 }
 
@@ -59,7 +59,7 @@ void SocketBase::Connect(const char* host, int port){
     inet_pton(AF_INET, host, &m_address.sin_addr);
 
     if (connect(m_socket, (sockaddr *)&m_address, sizeof(m_address)) < 0) {
-        std::cout << "Connect: " << strerror(errno) << std::endl;
+        std::cerr << "Connect: " << strerror(errno) << std::endl;
         Close();
     }
 }
@@ -67,7 +67,7 @@ void SocketBase::Connect(const char* host, int port){
 void SocketBase::Send(int socket, const void* data, size_t dataSize){
     ssize_t bytesSent = send(socket, data, dataSize, 0);
     if (bytesSent < dataSize) {
-        std::cout << "Send: " << strerror(errno)<< std::endl;
+        std::cerr << "Send: " << strerror(errno)<< std::endl;
     }
 }
 
@@ -103,7 +103,7 @@ void SocketBase::identifyConnection(int socket){
         int clientPort = ntohs(clientAdd.sin_port);
         std::cout << "ip: " << ip_str << ":" << clientPort <<std::endl;
     } else {
-        std::cout << "Getting client info errror\n"<<strerror(errno);
+        std::cerr << "Getting client info errror\n"<<strerror(errno);
     }
 }
 
