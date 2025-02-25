@@ -12,22 +12,24 @@
 
 class SocketBase {
  public:
-    SocketBase();
-    ~SocketBase();
+    SocketBase() = default;
+    ~SocketBase() = default;
     void Socket();
     void SetSocketOptions();
     void Bind(int);
     void Listen();
     int Accept();
-    void Connect(const char* host, int port);
-    void Send(int socket, const void *data, size_t);
-    void Receive(int socket, void *data, size_t);
+    void Connect(const char*, int );
+    void Send(int , const void *, size_t);
+    void Receive(int , void *, size_t);
     void Close();
     void Close(int);
     int getSocket();
 
-    Message receiveMessage(int socket);
-    bool sendMessage(int clientSocket, const Message& message);
+    void identifyConnection(int);
+
+    Message receiveMessage(int);
+    bool sendMessage(int, const Message& );
  protected:
     int m_socket;
     sockaddr_in m_address;

@@ -3,24 +3,35 @@
 #include "ssapi/INetworkService.h"
 #include "MessageHandler.h"
 
+void welcomeScreen(const char* who) {
+    std::cout << std::endl
+        << "+-+  +-+ +------+ +------+ +-----\" \n"
+        << "|  \\ | | | +--+ | | +--+ | | +--+ |\n"
+        << "|   \\| | | |  | | | |  | | | +--+/ \n"
+        << "| |\\   | | |  | | | |  | | | +--+\\ \n"
+        << "| | \\  | | +--+ | | +--+ | | +--+ |\n"
+        << "+-+  +-+ +------+ +------+  +----/ \n"
+        << std::endl;
 
+    std::cout << "Terminal TCP "<< who <<"\n"
+              << "Coded by Niesov Oleksandr \n"
+              << std::endl;
+}
 int main() {
-    // Message respMessage; //{"Resp from server"};
+    welcomeScreen("Server");
     
-
     INetworkService* service = new TcpSocketServer(8080);
     MessageHandler handler;
     service -> start();
     
     while(true){
         int connection = service -> Accept();
-        
         Message incomingMessage =  service -> receiveMessage(connection);
-        std::cout<<"Inc Message : "<< incomingMessage;
-
         Message respMessage  = handler.handle(incomingMessage);
-        std::cout<<"Out Message : "<< respMessage;
         service -> sendMessage(connection, respMessage);
+
+        std::clog<<"Inc Message : "<< incomingMessage <<std::endl;
+        std::clog<<"Out Message : "<< respMessage <<std::endl;;
     }
     return 0;
 }

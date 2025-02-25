@@ -33,7 +33,6 @@ class Message {
         static void toBytes(const Message&, char*  );
         static void fromBytes(const char*, Message& ); 
         
-
     private:
         MessageType m_messageType;
         std::string m_messageData;

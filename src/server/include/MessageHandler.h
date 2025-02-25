@@ -9,9 +9,10 @@ class MessageHandler {
     public:
         MessageHandler() = default;
         ~MessageHandler();
-        Message handle(const Message& message);
+        Message handle(const Message&);
             
     private:
+        Message convert(const Message&, const ITaskProcessor&);
         ITaskProcessor* m_taskProcessor;
 };
     

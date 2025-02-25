@@ -13,13 +13,13 @@ MessageHandler::~MessageHandler(){
     if (m_taskProcessor) {
         delete m_taskProcessor;
     }
+    m_taskProcessor = nullptr;
 }
 
-Message MessageHandler::handle(const Message& message)
-{
+Message MessageHandler::handle(const Message& message) {
     Message respMessage {" "};
-    switch (message.getType())
-    {
+
+    switch (message.getType()) {
     case MessageType::echo:
         respMessage = message;
         break;
@@ -27,40 +27,41 @@ Message MessageHandler::handle(const Message& message)
     case MessageType::task1: {
         m_taskProcessor = new TaskProcessor_1;
 
+        // respMessage.setType(MessageType::task1);
+        // respMessage.setData( m_taskProcessor -> execute(message.getData()).c_str());
+
         std::string inData = message.getData();
         std::string outData = m_taskProcessor -> execute(inData);
         
         respMessage.setType(MessageType::task1);
         respMessage.setData(outData.c_str());
         delete m_taskProcessor;
-        m_taskProcessor = nullptr;
     }
     break;
 
     case MessageType::task2:{
-            m_taskProcessor = new TaskProcessor_2;
+        m_taskProcessor = new TaskProcessor_2;
 
-            std::string inData = message.getData();
-            std::string outData = m_taskProcessor -> execute(inData);
-            
-            respMessage.setType(MessageType::task2);
-            respMessage.setData(outData.c_str());
-            delete m_taskProcessor;
-            m_taskProcessor = nullptr;
-        }
-        break;
-    case MessageType::task4:{
-            m_taskProcessor = new TaskProcessor_4;
+        std::string inData = message.getData();
+        std::string outData = m_taskProcessor->execute(inData);
 
-            std::string inData = message.getData();
-            std::string outData = m_taskProcessor -> execute(inData);
-            
-            respMessage.setType(MessageType::task2);
-            respMessage.setData(outData.c_str());
-            
-            delete m_taskProcessor;
-            m_taskProcessor = nullptr;
-        }
+        respMessage.setType(MessageType::task2);
+        respMessage.setData(outData.c_str());
+
+        delete m_taskProcessor;
+    }
+    break;
+    case MessageType::task4: {
+        m_taskProcessor = new TaskProcessor_4;
+
+        std::string inData = message.getData();
+        std::string outData = m_taskProcessor -> execute(inData);
+
+        respMessage.setType(MessageType::task4);
+        respMessage.setData(outData.c_str());
+
+        delete m_taskProcessor;
+    }
     break;
 
     default:
@@ -69,3 +70,4 @@ Message MessageHandler::handle(const Message& message)
     }
     return respMessage;
 }
+
