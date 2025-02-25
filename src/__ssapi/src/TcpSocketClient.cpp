@@ -15,7 +15,7 @@ void TcpSocketClient::stop(){
     m_network.Close();
 }
 
-bool TcpSocketClient::sendMessage(Message &message) {
+bool TcpSocketClient::sendMessage(const Message &message) {
     m_network.sendMessage(m_network.getSocket(), message);
     return true;
 }
@@ -23,7 +23,7 @@ Message TcpSocketClient::receiveMessage() {
     return m_network.receiveMessage(m_network.getSocket());
 }
 
-bool TcpSocketClient::sendMessage(int socket ,Message &message) {
+bool TcpSocketClient::sendMessage(int socket, const Message &message) {
     std::cout << "Operation is not supported for client\n";
     return true;
 }

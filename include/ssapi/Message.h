@@ -3,8 +3,8 @@
 #include <string>
 #include <ostream>
 
-enum class MessageType : uint8_t{
-    task1, task2, echo=99
+enum class MessageType : uint8_t {
+    echo, task1, task2 , task4 = 4 
 };
 
 class Message {
@@ -12,11 +12,10 @@ class Message {
         Message() = default;
         Message(const Message& other) = default;
         Message(Message&& other) = default;
+        
         Message(const char* data); 
         Message(std::string& );
         Message(MessageType type, const std::string& data);
-
-
 
         friend std::ostream& operator<<(std::ostream& os, const Message& msg);
         Message& operator=(const Message& other) = default;
@@ -39,16 +38,3 @@ class Message {
         MessageType m_messageType;
         std::string m_messageData;
 };
-
-
-
-
-// class Message {
-// public:
-//     MessageType type;
-//     std::string data;
-
-//     Message(MessageType t, const std::string& d) : type(t), data(d) {}
-// };
-    
-

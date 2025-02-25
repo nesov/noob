@@ -19,7 +19,7 @@ void TcpSocketServer::stop() {
 }
 
 
-bool TcpSocketServer::sendMessage(Message &message) {
+bool TcpSocketServer::sendMessage(const Message &message) {
     std::cout << "Operation is not recommended for Server\n";
     m_network.sendMessage(m_network.getSocket(), message);
     return true;
@@ -30,7 +30,7 @@ Message TcpSocketServer::receiveMessage() {
 }
 
 
-bool TcpSocketServer::sendMessage(int socket, Message &message){
+bool TcpSocketServer::sendMessage(int socket, const Message &message){
     m_network.sendMessage(socket, message);
     return true;
 }
