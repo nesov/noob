@@ -11,7 +11,7 @@
 #include "ssapi/Message.h"
 
 class SocketBase {
-public:
+ public:
     SocketBase();
     ~SocketBase();
     void Socket();
@@ -24,13 +24,11 @@ public:
     void Receive(int socket, void *data, size_t);
     void Close();
     void Close(int);
-
     int getSocket();
 
     Message receiveMessage(int socket);
     bool sendMessage(int clientSocket, const Message& message);
-
-protected:
+ protected:
     int m_socket;
     sockaddr_in m_address;
 };

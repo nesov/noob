@@ -4,7 +4,7 @@
 #include <ostream>
 
 enum class MessageType : uint8_t {
-    echo, task1, task2 , task4 = 4 
+    echo, task1, task2, task4 = 4 
 };
 
 class Message {

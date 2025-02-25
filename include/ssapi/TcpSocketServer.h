@@ -3,7 +3,6 @@
 #include "ssapi/Message.h"
 #include "ssapi/INetworkService.h"
 #include "ssapi/SocketBase.h"
-#include "ssapi/IAcceptable.h"
 
 
 class TcpSocketServer : public INetworkService  {

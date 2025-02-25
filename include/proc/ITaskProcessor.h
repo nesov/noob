@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ssapi/Data.h"
+#include <string>
 
 class ITaskProcessor {
-    public: 
-       virtual std::string execute(const std::string& ) = 0;
-       virtual ~ITaskProcessor() = default;
-   };
+ public: 
+   virtual std::string execute(const std::string& ) = 0;
+   virtual ~ITaskProcessor() = default;
+};

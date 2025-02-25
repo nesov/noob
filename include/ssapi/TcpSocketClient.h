@@ -1,10 +1,10 @@
 #pragma once
 
+#include <string>
+
 #include "ssapi/INetworkService.h"
 #include "ssapi/SocketBase.h"
 #include "ssapi/Message.h"
-
-#include <string>
 
 
 class TcpSocketClient : public INetworkService { 
