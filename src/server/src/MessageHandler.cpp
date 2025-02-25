@@ -17,8 +17,7 @@ Message MessageHandler::handle(const Message& message)
     Message respMessage {" "};
     switch (message.getType())
     {
-    case MessageType::task1:
-    {
+    case MessageType::task1: {
         m_taskProcessor = new TaskProcessor_1;
 
         std::string inData = message.getData();
