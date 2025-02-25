@@ -4,8 +4,7 @@
 
 class TaskProcessor_2 : public ITaskProcessor {
  public:  
-   //  Data execute(Data& data);
-    std::string execute(std::string& );
+    std::string execute(const std::string& );
  private: 
     template<typename T>
     T taskTwo(T a, T b) {

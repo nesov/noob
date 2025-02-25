@@ -1,20 +1,17 @@
 
 #include <string>
-#include "ssapi/Data.h"
 #include "proc/TaskProcessor_1.h"
 
-// Data TaskProcessor_1::execute(Data& data) {
-//     std::string input = data.StringData;
-//     std::string result = taskOne(input.c_str());
-   
-//     Data outData;
-//     outData.StringData = result.c_str();
-//     return outData;
-// }
+std::string TaskProcessor_1::execute(const std::string& data) {
+    return taskOne(data);
+}
 
-std::string TaskProcessor_1::execute(std::string& data) {
+std::string TaskProcessor_1::taskOne(const std::string& firstName){
+    std::string predicate {"Alexandr"};
+    return (firstName == predicate ) ? predicate + " Niesov" : "NO MATCH";
+}
 
-    //BUG: 
+ //BUG: 
     /*
         1. send Alexandr
         2. recieve Alexandr Niesov  - which is correct behaviour
@@ -24,24 +21,22 @@ std::string TaskProcessor_1::execute(std::string& data) {
         ER: 
             - method adds " " space and returns     
     */
-    std::string result = taskOne(data.c_str());
-    
-    return result;
-}
-
-char* TaskProcessor_1::taskOne(const char* name) {
+    // std::string result = taskOne(data.c_str());
+// char* TaskProcessor_1::taskOne(const char* name) {
     /*
         1 Відправити з клієнта на сервер своє ім’я,
         на сервері додати до імені своє прізвище та відпрарезультат на клієнт.
     */
-    static char result[20] = " ";
-    const char *firstName = "Alexandr";
+//     static char result[20] = " ";
+//     const char *firstName = "Alexandr";
 
-    if (strcmp(name, firstName) == 0) {
-        strcpy(result, firstName);
-        strcat(result, " Niesov");
-        return result;
-    }
-    return result;
-}
+//     if (strcmp(name, firstName) == 0) {
+//         strcpy(result, firstName);
+//         strcat(result, " Niesov");
+//         return result;
+//     }
+//     return result;
+// }
+
+
  

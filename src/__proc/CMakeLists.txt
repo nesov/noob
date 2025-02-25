@@ -1,6 +1,7 @@
 set(TARGET proc)
 # set(INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/include")
-set(SOURCE_DIR  src/ITaskProcessor.cpp
+set(SOURCE_DIR  
+                # src/ITaskProcessor.cpp
                 src/TaskProcessor_1.cpp 
                 src/TaskProcessor_2.cpp)
 

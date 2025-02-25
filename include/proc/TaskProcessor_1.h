@@ -5,8 +5,8 @@
 
 class TaskProcessor_1 : public ITaskProcessor {
 public:
-  // Data execute(Data& data);
-  std::string execute(std::string& data);
+  std::string execute(const std::string& data);
 private:
-  char *taskOne(const char* name);
+  // char *taskOne(const char* name);
+  std::string taskOne(const std::string &firstName);
 };

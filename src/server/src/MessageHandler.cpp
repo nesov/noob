@@ -12,9 +12,9 @@ MessageHandler::~MessageHandler(){
     }
 }
 
-Message MessageHandler::handle(const Message &message)
+Message MessageHandler::handle(const Message& message)
 {
-    Message respMessage;
+    Message respMessage {" "};
     switch (message.getType())
     {
     case MessageType::task1:
@@ -26,8 +26,6 @@ Message MessageHandler::handle(const Message &message)
         
         respMessage.setType(MessageType::task1);
         respMessage.setData(outData.c_str());
-        
-
         delete m_taskProcessor;
     }
 
