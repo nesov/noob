@@ -1,5 +1,5 @@
-#pragma once
+// #pragma once
 
-#include <iostream>
+// #include <iostream>
 
-constexpr const char* fileToLock = {"/tmp/tcp_server.lock"};
+// constexpr const char* fileToLock = {"/tmp/tcp_server.lock"};

@@ -7,7 +7,6 @@
 
 #include <iostream>
 
-#include "ssapi/Consts.h"
 #include "ssapi/Message.h"
 
 class SocketBase {

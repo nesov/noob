@@ -1,11 +1,12 @@
 
 set(TARGET_NAME _console_client)
+project(${TARGET_NAME})
 
 set(SOURCE_DIR src/main.cpp
-                src/utils.cpp
 
 )
-project(${TARGET_NAME})
+
+
 add_executable(${TARGET_NAME} ${SOURCE_DIR})
 target_include_directories(${TARGET_NAME} PRIVATE ${INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(${TARGET_NAME} PRIVATE ssapi)

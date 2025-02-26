@@ -6,9 +6,8 @@
 #include "ssapi/INetworkService.h"
 #include "ssapi/Message.h"
 
-#include "utils.h"
+#include "consts.h"
 
-extern void welcomeServerScreen();
 
 void clearScreen() {
     system("clear");

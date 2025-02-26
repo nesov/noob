@@ -1,6 +1,6 @@
 
 #include "ServerApplication.h"
-
+#include "MessageHandler.h"
 
 ServerApplication::ServerApplication(const int port) {
     lock();
@@ -62,12 +62,12 @@ void ServerApplication::run(){
 void ServerApplication::lock() {
     m_lock = open(fileToLock, O_CREAT | O_RDWR, 0666);
     if (m_lock == -1) {
-        std::cerr << "Server is already runnig!\n";
+        std::cerr << "Server is already running!\n";
         exit(EXIT_FAILURE);
     }
 
     if (flock(m_lock, LOCK_EX | LOCK_NB) == -1){
-        std::cerr << "Server is already runnig!\n";
+        std::cerr << "Server is already running!\n";
         close(m_lock);
         exit(EXIT_FAILURE);
     }

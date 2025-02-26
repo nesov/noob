@@ -12,11 +12,9 @@
 #include "ssapi/TcpSocketServer.h"
 #include "ssapi/Message.h"
 
-#include "MessageHandler.h"
+#include "IMessageHandler.h"
 #include "MessageQueue.h"
-#include "ServerConsts.h"
-
-
+#include "consts.h"
 
 
 class ServerApplication {
@@ -32,7 +30,7 @@ class ServerApplication {
     void lock();
     void unlock();
 
-    MessageHandler*     m_messageHandler;
+    IMessageHandler*    m_messageHandler;
     INetworkService*    m_networkService;
     MessageQueue<std::pair<int, Message> > m_queue;
     std::vector <std::thread> m_workers;
