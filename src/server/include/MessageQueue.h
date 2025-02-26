@@ -14,6 +14,7 @@ public:
         cv.notify_one();
     }
 
+    
     std::optional<T> pop() {
         std::unique_lock<std::mutex> lock(m_mtx);
         if (m_queue.empty()) {
@@ -24,6 +25,7 @@ public:
         return value;
     }
 
+
     T waitAndPop() {
         std::unique_lock<std::mutex> lock(m_mtx);
         cv.wait(lock, [this] { return !m_queue.empty(); });
@@ -32,10 +34,12 @@ public:
         return value;
     }
 
+
     bool empty() const {
         std::lock_guard<std::mutex> lock(m_mtx);
         return m_queue.empty();
     }
+
 
     size_t size() const {
         std::lock_guard<std::mutex> lock(m_mtx);

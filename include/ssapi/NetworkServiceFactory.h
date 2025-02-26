@@ -6,8 +6,8 @@
 #include "ssapi/TcpSocketServer.h"
 
 class NetworkServiceFactory {
-    public:
+ public:
     NetworkServiceFactory() = default;
     ~NetworkServiceFactory() = default;
-    INetworkService* createNetworkService(bool, std::string, int);
+    INetworkService* createNetworkService(bool isClient , std::string host, int port);
 };

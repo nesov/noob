@@ -1,10 +1,11 @@
 
-
 #include "WantPlayAgainDialog.h"
+
 
 void WantPlayAgainDialog::show() {
     std::cout << "Want to play again Y/n : "; 
 }
+
 
 bool WantPlayAgainDialog::yesNo() {
     char choice;

@@ -22,9 +22,7 @@ public:
     Message receiveMessage(int socket) override;
 
     bool isConnected() override; 
-    
     int Accept() override;
-
 private:
     SocketBase m_network;
     std::string m_host;

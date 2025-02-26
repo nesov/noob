@@ -1,9 +1,10 @@
 
-#include "ConsoleApplication.h"
 #include <ssapi/Message.h>
+#include "ConsoleApplication.h"
 
 #include "MainDialog.h"
 #include "WantPlayAgainDialog.h"
+
 
 ConsoleApplication::ConsoleApplication(){
     m_network = (new NetworkServiceFactory) -> createNetworkService(true,"127.0.0.1",8080);
@@ -25,7 +26,8 @@ ConsoleApplication::~ConsoleApplication(){
         }
     }
 }
-    
+
+
 int  ConsoleApplication::run(){
     while (true){
         auto dialog = static_cast<MainDialog*>(m_dialogs[0]);
@@ -45,73 +47,6 @@ int  ConsoleApplication::run(){
     }
     return 0;
 }
-
-
-
-
-
-
-    // bool isRunning = true;
-    // while(isRunning) {
-    //     int type = -1;
-    //     std::string data;
-    //     type = selectTaskDialog();
-    //     if (type == -1 ){
-    //         break;
-    //     } else {
-    //         data = enterTextDialog();
-    //         if (composeMessageAndSend(type, data) == false) break;
-    //     }
-    //     isRunning = claerScreenDialog();
-    // }
-
-
-
-
-// void ConsoleApplication::clearScreen() {
-//     std::system("clear");
-// }
-
-// int ConsoleApplication::selectTaskDialog() {
-//     int choice = 0;
-//     std::cout
-//     <<"+-----------+"<<"\n"
-//     <<"| "<<"Task 1 - 1"<<"|\n"
-//     <<"| "<<"Task 2 - 2"<<"|\n"
-//     <<"| "<<"Task 4 - 4"<<"|\n"
-//     <<"+-----------+\n"
-//     <<"| "<<"Exit -(-1)"<<"|\n"
-//     <<"+----------+"<<"\n";
-//     std::cout<< "Select task to process: ";
-//     std::cin >> choice;
-//     std::cin.ignore();
-//     return choice;
-// }
-
-
-// bool ConsoleApplication::claerScreenDialog() {
-//     bool result;
-//     char choice;
-//     std::cout << "Want to play again Y/n : "; 
-//     std::cin >> choice;
-//     std::cin.ignore();
-    
-//     switch (choice){
-//         case 'Y':
-//             //clearScreen();
-//             result = true;
-//             break;
-//         case 'n':
-//             //clearScreen();
-//             result = false;
-//             break;
-//         default:
-//             result = false;
-//             break;
-//     }
-//     return result;
-// }
-
 
 
 bool ConsoleApplication::composeMessageAndSend(int task, std::string& text){
@@ -137,10 +72,6 @@ bool ConsoleApplication::composeMessageAndSend(int task, std::string& text){
 
     return true;
 }
-
-
-
-
 
 
 void show(const Message& sent, const Message& received){

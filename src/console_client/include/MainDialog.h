@@ -6,11 +6,11 @@
 #include <string>
 
 class MainDialog : public BaseDialog {
-    public:
-        MainDialog() = default;
-        ~MainDialog() = default;
-
-        void show() override;
-        int enterType();
-        std::string enterText();
+ public:
+    MainDialog() = default;
+    ~MainDialog() = default;
+    void show() override;
+    
+    int enterType();
+    std::string enterText();
 };
