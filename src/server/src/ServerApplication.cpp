@@ -2,14 +2,14 @@
 #include "ServerApplication.h"
 #include "MessageHandler.h"
 
+
 ServerApplication::ServerApplication(const int port) {
     lock();
     m_messageHandler = new MessageHandler;
-    // m_networkService = new TcpSocketServer(port);
-
     m_networkService = (new NetworkServiceFactory) -> createNetworkService(false, "127.0.0.1", 8080);
     m_networkService -> start();
 }
+
 
 ServerApplication::~ServerApplication() {
     for (auto& worker : m_workers) {
@@ -28,7 +28,8 @@ ServerApplication::~ServerApplication() {
         delete m_messageHandler;
         m_messageHandler = nullptr;
     }
- }
+}
+
 
 void ServerApplication::serve(){
     while (true) {
@@ -50,6 +51,7 @@ void ServerApplication::listen(){
     }
 }
 
+
 void ServerApplication::run(){
     m_workers.emplace_back([&]() { listen();});
     m_workers.emplace_back([&]() { serve(); }); 
@@ -60,6 +62,8 @@ void ServerApplication::run(){
     //     }
     // }
 }
+
+
 
 void ServerApplication::lock() {
     m_lock = open(fileToLock, O_CREAT | O_RDWR, 0666);
@@ -75,6 +79,8 @@ void ServerApplication::lock() {
     }
 }
 
+
+
 void ServerApplication::unlock() {
     if (m_lock != -1) {
         flock(m_lock, LOCK_UN);
@@ -82,5 +88,3 @@ void ServerApplication::unlock() {
         unlink(fileToLock);
     }
 }
-
-

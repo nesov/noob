@@ -1,7 +1,9 @@
 
-#include <iostream>
+#pragma once
 
 #include "BaseDialog.h"
+#include <iostream>
+
 
 
 class WantPlayAgainDialog : public BaseDialog {

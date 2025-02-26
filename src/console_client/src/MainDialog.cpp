@@ -1,6 +1,7 @@
 
 #include "MainDialog.h"
 
+
 void MainDialog::show() {
     std::cout
     <<"+------------------------------------------------------+\n"
@@ -12,13 +13,7 @@ void MainDialog::show() {
     <<"| "<<"Exit                                                 |\n"
     <<"+------------------------------------------------------+\n";
 }
-//Task 1 
-//Send your name from the client to the server, 
-//add your last name to the name on the server, 
-//and send the result to the client.
 
-
-//Task 2
 
 int  MainDialog::enterType(){
     int choice;
@@ -27,6 +22,7 @@ int  MainDialog::enterType(){
     std::cin.ignore();
     return choice;
 }
+
 
 std::string MainDialog::enterText(){
     std::string text;

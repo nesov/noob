@@ -9,6 +9,7 @@ void SocketBase::Socket(){
     }
 }
 
+
 void SocketBase::SetSocketOptions(){
     int opt = 1;
     if (setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
@@ -16,6 +17,7 @@ void SocketBase::SetSocketOptions(){
         Close();
     }
 }
+
 
 void SocketBase::Bind(int port) {
     std::memset(&m_address,0,sizeof(sockaddr_in));
@@ -29,12 +31,14 @@ void SocketBase::Bind(int port) {
     }
 }
 
+
 void SocketBase::Listen(){
     if(listen(m_socket, SOMAXCONN) < 0){
         std::cerr<<"Listen: "<<strerror(errno)<<std::endl;
         Close();
     }
 }
+
 
 int SocketBase::Accept(){
     sockaddr_in clientAddr;
@@ -52,6 +56,7 @@ int SocketBase::Accept(){
     return clientSock;   
 }
 
+
 bool SocketBase::Connect(const char* host, int port){
     std::memset(&m_address, 0, sizeof(sockaddr_in));
     m_address.sin_family = AF_INET;
@@ -65,6 +70,7 @@ bool SocketBase::Connect(const char* host, int port){
     }
     return true;
 }
+
 //Need to be fixed
 void SocketBase::Send(int socket, const void* data, size_t dataSize){
     ssize_t bytesSent = send(socket, data, dataSize, 0);
@@ -81,19 +87,23 @@ void SocketBase::Receive(int socket, void* data, size_t dataSize) {
     }
 }
 
+
 void SocketBase::Close() {
     shutdown(m_socket, SHUT_RDWR);
     close(m_socket);
 }
+
 
 void SocketBase::Close(int socket){
     shutdown(m_socket, SHUT_RDWR);
     close(socket);
 }
 
+
 int SocketBase::getSocket(){
     return m_socket;
 }
+
 
 void SocketBase::identifyConnection(int socket){
     sockaddr_in clientAdd;
@@ -130,6 +140,7 @@ bool SocketBase::sendMessage(int socket, const Message &message)
     return true;
 }
 
+
 Message SocketBase::receiveMessage(int socket) {
     uint8_t type {0};
     uint32_t dataSize{0};
@@ -146,6 +157,7 @@ Message SocketBase::receiveMessage(int socket) {
     }
     return Message(static_cast<MessageType>(type), data);
 }
+
 
 bool SocketBase::isConnected() {
     return (m_socket < 0) ? false : true;

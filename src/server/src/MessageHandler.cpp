@@ -1,3 +1,4 @@
+
 #include <string>
 #include <iostream>
 
@@ -13,6 +14,7 @@ MessageHandler::~MessageHandler(){
         m_taskProcessor = nullptr;
     }
 }
+
 
 Message MessageHandler::handle(const Message& message) {
     Message respMessage {" "};
@@ -49,7 +51,7 @@ Message MessageHandler::handle(const Message& message) {
     break;
 
     default:
-        respMessage = "Unsupported message type\n";
+        respMessage = "Unsupported message type.\n";
         break;
     }
     return respMessage;

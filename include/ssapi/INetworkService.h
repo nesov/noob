@@ -2,6 +2,7 @@
 
 #include "ssapi/Message.h"
 
+
 class INetworkService {
  public:
     virtual ~INetworkService() = default;

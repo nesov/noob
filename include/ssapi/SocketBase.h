@@ -11,27 +11,25 @@
 
 class SocketBase {
  public:
-    SocketBase() = default;
-    ~SocketBase() = default;
-    void Socket();
-    void SetSocketOptions();
-    void Bind(int);
-    void Listen();
-    int Accept();
-    bool Connect(const char*, int );
-    void Send(int , const void*, size_t);
-    void Receive(int , void*, size_t);
-    void Close();
-    void Close(int);
-    int getSocket();
+   SocketBase() = default;
+   ~SocketBase() = default;
+   void Socket();
+   void SetSocketOptions();
+   void Bind(int port);
+   void Listen();
+   int Accept();
+   bool Connect(const char * host, int port);
+   void Send(int socket, const void* data, size_t size);
+   void Receive(int socket, void * data, size_t size);
+   void Close();
+   void Close(int socket);
+   int getSocket();
+   void identifyConnection(int socket);
+   bool isConnected();
+   Message receiveMessage(int socket);
+   bool sendMessage(int socket, const Message& mssage);
 
-    void identifyConnection(int);
-
-
-      bool isConnected();
-    Message receiveMessage(int);
-    bool sendMessage(int, const Message& );
- protected:
-    int m_socket;
-    sockaddr_in m_address;
+protected:
+   int m_socket;
+   sockaddr_in m_address;
 };
