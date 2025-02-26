@@ -9,7 +9,7 @@
 #include <thread>
 
 #include "ssapi/INetworkService.h"
-#include "ssapi/TcpSocketServer.h"
+#include "ssapi/NetworkServiceFactory.h"
 #include "ssapi/Message.h"
 
 #include "IMessageHandler.h"

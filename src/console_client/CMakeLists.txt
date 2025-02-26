@@ -3,6 +3,7 @@ set(TARGET_NAME _console_client)
 project(${TARGET_NAME})
 
 set(SOURCE_DIR src/main.cpp
+                src/ConsoleApplication.cpp
 
 )
 

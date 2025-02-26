@@ -19,8 +19,8 @@ class SocketBase {
     void Listen();
     int Accept();
     void Connect(const char*, int );
-    void Send(int , const void *, size_t);
-    void Receive(int , void *, size_t);
+    void Send(int , const void*, size_t);
+    void Receive(int , void*, size_t);
     void Close();
     void Close(int);
     int getSocket();

@@ -5,7 +5,9 @@
 ServerApplication::ServerApplication(const int port) {
     lock();
     m_messageHandler = new MessageHandler;
-    m_networkService = new TcpSocketServer(port);
+    // m_networkService = new TcpSocketServer(port);
+
+    m_networkService = (new NetworkServiceFactory) -> createNetworkService(false, "127.0.0.1", 8080);
     m_networkService -> start();
 }
 

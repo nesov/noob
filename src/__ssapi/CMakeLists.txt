@@ -1,9 +1,11 @@
 
+
 set(TARGET ssapi)
 set(SOURCE_DIR  
                 src/TcpSocketClient.cpp 
                 src/TcpSocketServer.cpp 
                 src/SocketBase.cpp
+                src/NetworkServiceFactory.cpp
                 src/Message.cpp
     )
 
