@@ -2,6 +2,7 @@
 
 #include "ssapi/Message.h"
 #include "proc/ITaskProcessor.h"
+#include  "proc/TaskProcessorFactory.h"
 #include "IMessageHandler.h"
 
 
@@ -12,7 +13,7 @@ class MessageHandler : public IMessageHandler {
         Message handle(const Message&);
             
     private:
-        // Message convert(const Message&, const ITaskProcessor&);
         ITaskProcessor* m_taskProcessor;
+        TaskProcessorFactory m_processorFactory;
 };
     

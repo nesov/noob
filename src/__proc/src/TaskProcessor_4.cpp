@@ -12,7 +12,7 @@ std::string TaskProcessor_4::execute(const std::string& data) {
          double value = std::stod(str);
          doubles.push_back(value);
      }
-    return std::to_string(taskFour(doubles));
+    return "Maximum element is: "+ std::to_string(taskFour(doubles));
 }
 
 

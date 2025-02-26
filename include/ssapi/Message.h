@@ -17,13 +17,11 @@ class Message {
         Message(std::string& );
         Message(MessageType type, const std::string& data);
 
-        friend std::ostream& operator<<(std::ostream& os, const Message& msg);
-        Message& operator=(const Message& other) = default;
-
         MessageType getType() const;
         std::string getData() const;
 
         void setData(const char* data);
+        void setData(std::string& data);
         void setType(MessageType type); 
         size_t size();
 
@@ -32,8 +30,12 @@ class Message {
 
         static void toBytes(const Message&, char*  );
         static void fromBytes(const char*, Message& ); 
+
+        friend std::ostream& operator<<(std::ostream& os, const Message& msg);
+        Message& operator=(const Message& other) = default;
         
     private:
         MessageType m_messageType;
         std::string m_messageData;
+
 };

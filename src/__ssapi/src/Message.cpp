@@ -1,6 +1,7 @@
 
 #include "ssapi/Message.h"
 
+
 Message::Message(const char* data) : 
                 m_messageType(MessageType::echo), m_messageData(std::string(data)) {}
 
@@ -22,6 +23,10 @@ std::string Message::getData() const {
 
 void Message::setData(const char* data) {
     m_messageData = std::string(data);
+}
+
+void Message::setData(std::string& data) {
+    m_messageData = data;
 }
 
 void Message::setType(MessageType type) {

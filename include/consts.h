@@ -7,8 +7,8 @@
 constexpr const char* fileToLock = {"/tmp/tcp_server.lock"};
 
 //
-constexpr const char* kPatternForTask1 = R"(\bOleksandr\b)";
-constexpr const char* kPatternForTask2 = R"(-?\d+(\.\d+)?)"; //relevant for task 2 and task 4 
+// constexpr const char* kPatternForTask1 = R"(\bOleksandr\b)";
+// constexpr const char* kPatternForTask2 = R"(-?\d+(\.\d+)?)"; //relevant for task 2 and task 4 
 
 //Common
 constexpr std::string  kHost {"127.0.0.1"};

@@ -7,6 +7,7 @@ set(            SOURCE_DIR
                 src/TaskProcessor_1.cpp 
                 src/TaskProcessor_2.cpp
                 src/TaskProcessor_4.cpp
+                src/TaskProcessorFactory.cpp
     )
 
 

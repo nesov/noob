@@ -9,5 +9,5 @@ std::string TaskProcessor_2::execute(const std::string& data){
      if (vec.size() < 2 ) return "There should be at least two numbers in this string\n";
      double a = std::stod(vec[0]);
      double b = std::stod(vec[1]);
-     return std::to_string(taskTwo(a,b));
+     return "The Sum (first two found numbers) is: " + std::to_string(taskTwo(a,b));
 }
