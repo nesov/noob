@@ -6,9 +6,9 @@ TcpSocketClient::TcpSocketClient(std::string host, int port) : m_host(host), m_p
 
 TcpSocketClient::~TcpSocketClient(){}
 
-void TcpSocketClient::start(){
+bool TcpSocketClient::start(){
     m_network.Socket();
-    m_network.Connect(m_host.c_str(), m_port);
+    return m_network.Connect(m_host.c_str(), m_port);
 }
 
 void TcpSocketClient::stop(){
@@ -35,4 +35,8 @@ Message TcpSocketClient::receiveMessage(int socket) {
 int TcpSocketClient::Accept(){
     std::cout << "Operation is not supported for client\n";
     return -1;
+}
+
+bool TcpSocketClient::isConnected() {   
+    return m_network.isConnected();
 }

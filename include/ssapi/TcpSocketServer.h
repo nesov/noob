@@ -10,7 +10,7 @@ public:
     TcpSocketServer(int port);
     ~TcpSocketServer();
 
-    void start() override;
+    bool start() override;
     void stop() override;
 
     bool sendMessage(const Message &message) override;
@@ -18,6 +18,8 @@ public:
 
     Message receiveMessage(int socket) override;
     Message receiveMessage() override;
+
+    bool isConnected() override;
 
     int Accept() override;
 

@@ -18,7 +18,7 @@ class SocketBase {
     void Bind(int);
     void Listen();
     int Accept();
-    void Connect(const char*, int );
+    bool Connect(const char*, int );
     void Send(int , const void*, size_t);
     void Receive(int , void*, size_t);
     void Close();
@@ -27,6 +27,8 @@ class SocketBase {
 
     void identifyConnection(int);
 
+
+      bool isConnected();
     Message receiveMessage(int);
     bool sendMessage(int, const Message& );
  protected:

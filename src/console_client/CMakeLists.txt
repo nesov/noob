@@ -4,8 +4,10 @@ project(${TARGET_NAME})
 
 set(SOURCE_DIR src/main.cpp
                 src/ConsoleApplication.cpp
-
-)
+                src/BaseDialog.cpp
+                src/MainDialog.cpp
+                src/WantPlayAgainDialog.cpp
+                src/Cache.cpp)
 
 
 add_executable(${TARGET_NAME} ${SOURCE_DIR})

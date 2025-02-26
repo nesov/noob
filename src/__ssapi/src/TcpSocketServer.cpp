@@ -5,11 +5,13 @@ TcpSocketServer::TcpSocketServer(int port):m_port(port){}
 
 TcpSocketServer::~TcpSocketServer(){}
 
-void TcpSocketServer::start() {
+bool TcpSocketServer::start() {
     m_network.Socket();
     m_network.Bind(m_port);
     m_network.SetSocketOptions();
     m_network.Listen();
+
+    return true;
 }
 
 void TcpSocketServer::stop() { 
@@ -38,4 +40,9 @@ Message TcpSocketServer::receiveMessage(int socket) {
 
 int TcpSocketServer::Accept(){
    return m_network.Accept();
+}
+
+bool TcpSocketServer::isConnected() {
+    std::cout << "Operation is not recommended for Server\n";
+    return (m_network.isConnected());
 }

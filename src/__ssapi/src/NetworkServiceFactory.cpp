@@ -3,8 +3,7 @@
 #include "ssapi/NetworkServiceFactory.h"
 
 
-INetworkService* NetworkServiceFactory::createNetworkService(bool isClient, std::string host, int port 
-) {
+INetworkService* NetworkServiceFactory::createNetworkService(bool isClient, std::string host, int port) {
 
     switch (static_cast<int>(isClient)) {
     case  0:

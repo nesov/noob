@@ -52,7 +52,7 @@ int SocketBase::Accept(){
     return clientSock;   
 }
 
-void SocketBase::Connect(const char* host, int port){
+bool SocketBase::Connect(const char* host, int port){
     std::memset(&m_address, 0, sizeof(sockaddr_in));
     m_address.sin_family = AF_INET;
     m_address.sin_port = htons(port);
@@ -61,7 +61,9 @@ void SocketBase::Connect(const char* host, int port){
     if (connect(m_socket, (sockaddr *)&m_address, sizeof(m_address)) < 0) {
         std::cerr << "Connect: " << strerror(errno) << std::endl;
         Close();
+        return false;
     }
+    return true;
 }
 //Need to be fixed
 void SocketBase::Send(int socket, const void* data, size_t dataSize){
@@ -143,4 +145,8 @@ Message SocketBase::receiveMessage(int socket) {
         std::cerr << "Error receiving data" <<strerror(errno)<<std::endl;
     }
     return Message(static_cast<MessageType>(type), data);
+}
+
+bool SocketBase::isConnected() {
+    return (m_socket < 0) ? false : true;
 }

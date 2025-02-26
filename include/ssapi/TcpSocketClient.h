@@ -12,7 +12,7 @@ public:
     TcpSocketClient(std::string host, int port);
     ~TcpSocketClient();
 
-    void start() override;
+    bool start() override;
     void stop() override;
 
     bool sendMessage(const Message &message) override;
@@ -20,9 +20,10 @@ public:
     
     Message receiveMessage() override ;
     Message receiveMessage(int socket) override;
-    
 
-    int Accept()override;
+    bool isConnected() override; 
+    
+    int Accept() override;
 
 private:
     SocketBase m_network;
