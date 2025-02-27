@@ -7,7 +7,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
     message("OS    : ${CMAKE_SYSTEM_NAME}")
     # set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64")
-    set(CMAKE_OSX_ARCHITECTURES "arm64")
+    set(CMAKE_OSX_ARCHITECTURES "x86_64")
     message("Arch  : ${CMAKE_OSX_ARCHITECTURES}")
 endif()
 
