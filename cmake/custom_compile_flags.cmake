@@ -1,8 +1,10 @@
 
-set(CMAKE_CXX_FLAGS_DEBUG           "-std=c++20 -O0 -g -Wall -fcolor-diagnostics -fansi-escape-codes -DDEBUG")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO  "-std=c++20 -O2 -g -DNDEBUG")
-set(CMAKE_CXX_FLAGS_RELEASE         "-std=c++20 -O3 -DNDEBUG")
-set(CMAKE_CXX_FLAGS_MINSIZEREL      "-std=c++20 -Os -DNDEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG           "${CMAKE_CXX_FLAGS_DEBUG} -std=c++20 -O0 -g -Wall -fcolor-diagnostics -fansi-escape-codes -DDEBUG")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO  "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -std=c++20 -O2 -g -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE         "${CMAKE_CXX_FLAGS_RELEASE} -std=c++20 -O3 -DNDEBUG")
+set(CMAKE_CXX_FLAGS_MINSIZEREL      "${CMAKE_CXX_FLAGS_MINSIZEREL} -std=c++20 -Os -DNDEBUG")
+
+set(CMAKE_CXX_STANDARD 20)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/include)
