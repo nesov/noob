@@ -1,9 +1,13 @@
 
 #pragma once
 
-#include "BaseDialog.h"
 #include <iostream>
 #include <string>
+#include <ios>
+#include <limits>
+
+
+#include "BaseDialog.h"
 
 class MainDialog : public BaseDialog {
  public:

@@ -10,16 +10,25 @@ void MainDialog::show() {
     <<"| "<<"Task (2) -  2 Send two nums, receive sum of elements.|\n"
     <<"| "<<"Task (4) -  4 Send nums arr, receive Max element.    |\n"
     <<"+------------------------------------------------------+\n"
-    <<"| "<<"Exit                                                 |\n"
+    <<"| "<<"                                                     |\n"
     <<"+------------------------------------------------------+\n";
 }
 
 
 int  MainDialog::enterType(){
     int choice;
-    std::cout<< "Select task to process: ";
-    std::cin >> choice;
-    std::cin.ignore();
+    while (true) {
+        std::cout << "Select task to process: ";
+        std::cin >> choice;
+        if (std::cin.fail()) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+            std::cout << "Invalid input! Please enter a number." << std::endl;
+        } else {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            break;
+        }
+    }
     return choice;
 }
 
