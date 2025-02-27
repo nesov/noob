@@ -15,9 +15,6 @@ class TaskProcessor_2 : public ITaskProcessor {
 
   template <typename T>
   T taskTwo(T a, T b) {
-    /*
-      2 Відправити на сервер два числа, знайти їх суму та повернути результат клієнту.
-    */
     return a + b;
   }
 };

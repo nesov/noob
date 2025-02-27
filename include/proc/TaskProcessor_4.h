@@ -15,9 +15,6 @@ class TaskProcessor_4 : public ITaskProcessor {
 
    template <typename T>
    T taskFour(std::vector<T>& arr) {
-       /*
-        4 Відправити на сервер масив, знайти його максимальний елемент та повернути результат клієнту
-       */
       T max = *std::max_element(arr.begin(),arr.end());
       return max;
   }
