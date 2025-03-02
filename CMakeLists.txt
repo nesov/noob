@@ -14,10 +14,10 @@ endif()
 include(custom_compile_flags)
 
 
-option(ENABLE_TESTS "Enable tests" OFF)
+option(ENABLE_TESTS "Enable tests" ON)
 if (${ENABLE_TESTS})
     enable_testing()
-    # add_subdirectory(tests)
+    add_subdirectory(tests)
 endif()
 
 
