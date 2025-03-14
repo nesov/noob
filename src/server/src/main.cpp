@@ -1,10 +1,11 @@
 
 #include "ServerApplication.h"
+#include "consts.h"
 
 
 int main() {
-    welcomeScreen("Async Server v1.2.11");
-    ServerApplication application(8080);
+    welcomeScreen("Async Server " + kVersion);
+    ServerApplication application(kPort);
     application.run();
     return 0; 
 }

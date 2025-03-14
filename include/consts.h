@@ -8,10 +8,11 @@ constexpr const char* fileToLock = {"/tmp/tcp_server.lock"};
 
 //Common
 constexpr std::string  kHost {"127.0.0.1"};
+constexpr int kPort {8080};
 
-constexpr int    kPort {8080};
+constexpr std::string kVersion {"v1.2.12"};
 
-inline void welcomeScreen(const char* who) {
+inline void welcomeScreen(const std::string& who) {
     std::cout << std::endl
         << "+-+  +-+ +------+ +------+ +-----\" \n"
         << "|  \\ | | | +--+ | | +--+ | | +--+ |\n"
