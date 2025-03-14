@@ -19,41 +19,22 @@ MessageHandler::~MessageHandler(){
 Message MessageHandler::handle(const Message& message) {
     Message respMessage {" "};
 
-    switch (message.getType()) {
-    case MessageType::echo:
-        respMessage = message;
-        break;
-
-    case MessageType::task1: 
-    {
-        m_taskProcessor = m_processorFactory.createTaskProcessor(static_cast<int>(MessageType::task1));
-        respMessage.setType(MessageType::task1);
+    bool iSsupportedMessageType = (message.getType() == MessageType::task1) 
+                            ||  (message.getType() == MessageType::task2) 
+                            ||  (message.getType() == MessageType::task4);
+                    
+    if (iSsupportedMessageType){
+        m_taskProcessor = m_processorFactory.createTaskProcessor(static_cast<int>(message.getType()));
+        respMessage.setType(message.getType());
         respMessage.setData(m_taskProcessor -> execute(message.getData()).c_str());
         delete m_taskProcessor;
-    }
-    break;
 
-    case MessageType::task2:
-    {
-        m_taskProcessor = m_processorFactory.createTaskProcessor(static_cast<int>(MessageType::task2));
-        respMessage.setType(MessageType::task2);
-        respMessage.setData((m_taskProcessor -> execute(message.getData())).c_str());
-        delete m_taskProcessor;        
-    }
-    break;
-    case MessageType::task4: 
-    {
-        m_taskProcessor = m_processorFactory.createTaskProcessor(static_cast<int>(MessageType::task4));
-        respMessage.setType(MessageType::task4);
-        respMessage.setData((m_taskProcessor -> execute(message.getData())).c_str());
-        delete m_taskProcessor;       
-    }
-    break;
-
-    default:
-        respMessage = "Unsupported message type.\n";
-        break;
+    } else if(message.getType() == MessageType::echo){
+        respMessage = message;
+        
+    } else {
+        respMessage.setType(message.getType());
+        respMessage.setData("Unsupported message type.\n");
     }
     return respMessage;
 }
-
