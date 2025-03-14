@@ -4,7 +4,7 @@
 
 
 int main(){ 
-    welcomeScreen("Client v1.2.11");
+    welcomeScreen("Client " + kVersion);
     ConsoleApplication application;
     return application.run();
 }

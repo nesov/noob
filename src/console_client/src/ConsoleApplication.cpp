@@ -4,10 +4,11 @@
 
 #include "MainDialog.h"
 #include "WantPlayAgainDialog.h"
+#include "consts.h"
 
 
 ConsoleApplication::ConsoleApplication(){
-    m_network = (new NetworkServiceFactory) -> createNetworkService(true,"127.0.0.1",8080);
+    m_network = (new NetworkServiceFactory) -> createNetworkService(true, kHost, kPort);
     m_dialogs.emplace_back(new MainDialog);
     m_dialogs.emplace_back(new WantPlayAgainDialog);
 }
@@ -28,7 +29,7 @@ ConsoleApplication::~ConsoleApplication(){
 }
 
 
-int  ConsoleApplication::run(){
+int  ConsoleApplication::run() {
     while (true){
         auto dialog = static_cast<MainDialog*>(m_dialogs[0]);
         dialog->show();
@@ -49,7 +50,7 @@ int  ConsoleApplication::run(){
 }
 
 
-bool ConsoleApplication::composeMessageAndSend(int task, std::string& text){
+bool ConsoleApplication::composeMessageAndSend(int task, std::string& text) {
     if (task < 0){
         std::cout<< "Task number can't be negative."<<std::endl;
         return false;
@@ -74,7 +75,7 @@ bool ConsoleApplication::composeMessageAndSend(int task, std::string& text){
 }
 
 
-void show(const Message& sent, const Message& received){
+void show(const Message& sent, const Message& received) {
     std::cout<<"Out Message : "<< sent <<std::endl;
     std::cout<<"Inc Message : "<< received <<std::endl;
 }

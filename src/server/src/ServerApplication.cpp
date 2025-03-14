@@ -55,12 +55,6 @@ void ServerApplication::listen(){
 void ServerApplication::run(){
     m_workers.emplace_back([&]() { listen();});
     m_workers.emplace_back([&]() { serve(); }); 
-
-    // for (auto& worker : m_workers) {
-    //     if (worker.joinable()) {
-    //         worker.join();
-    //     }
-    // }
 }
 
 
