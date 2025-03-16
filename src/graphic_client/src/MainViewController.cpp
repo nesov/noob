@@ -1,5 +1,6 @@
 
 #include "MainViewController.h"
+#include "AppConsts.h"
 
 
 inline void MainViewController::printMessageHistory(vector* m_messages ) {
@@ -15,20 +16,61 @@ inline void MainViewController::addMenuOptionsArray(vector* m_dropdownOptions) {
 }
 
 inline void MainViewController::onConnectButtonClicked(Fl_Widget* widget,void* user_data) {
-  const char* input_val = m_inputField -> value();
-  if (*input_val !='\0') {
+  std::string input_val = m_inputField -> value();
+  int type = getSelectedTaskType();
+  if (!input_val.empty()) {
     m_messages.push_back(input_val);
     m_inputField -> value("");
+    m_messages.push_back(composeMessageAndSend(type, input_val));
     printMessageHistory(&m_messages);
   }
 }
 
-inline void MainViewController::onSelectOptionClicked(Fl_Widget* widget, void* user_data){
-    auto* field = static_cast<Fl_Input_Choice*> (widget);
-    if ( strcmp((field -> value()), "Select Items")) {
-      m_inputField -> value((field -> value()));
-    }
+int MainViewController::getSelectedTaskType(){
+  std::string selected = m_selectTaskDropDown -> value();
+
+  if (selected == m_dropdownOptions[0]) 
+    return 0;
+  if (selected == m_dropdownOptions[1])
+    return 1; 
+  if (selected == m_dropdownOptions[2]) 
+    return 2;
+  if (selected== m_dropdownOptions[3])
+    return 4; 
+
+  return 0;
 }
+
+std::string MainViewController::composeMessageAndSend(int task, std::string& text) {
+  if (task < 0){
+      return "Task number can't be negative.";
+  }
+  Message message;
+  message.setType(static_cast<MessageType>(task));
+  message.setData(text.c_str()); 
+  Message fromServ;
+
+  if (m_network -> start()){
+    if (m_network -> isConnected()){
+        m_network -> sendMessage(message);
+        fromServ = m_network -> receiveMessage();
+        m_network -> stop();
+    } else {  
+      return "Message is not send due to connecting issues.";
+    }
+  } else {
+      return "Message is not sent due to connecting issues, Make sure the server is running.";
+  }
+  return fromServ.getData();
+}
+
+
+// inline void MainViewController::onSelectOptionClicked(Fl_Widget* widget, void* user_data){
+//     auto* field = static_cast<Fl_Input_Choice*> (widget);
+//     if ( strcmp((field -> value()), "Select Items")) {
+//       m_inputField -> value((field -> value()));
+//     }
+// }
 
 inline void MainViewController::onExitButtonClicked(Fl_Widget* widget, void* user_data) {
     auto* input = static_cast<MainViewController*>(user_data);
@@ -36,9 +78,17 @@ inline void MainViewController::onExitButtonClicked(Fl_Widget* widget, void* use
     exit(0);
 }
 
-MainViewController::MainViewController() {
+// MainViewController::MainViewController(){
+//   Draw();
+// }
+
+MainViewController::MainViewController(INetworkService* service) {
+  if (service) {
+    m_network = service;
+  }
   Draw();
 }
+
 
 MainViewController::~MainViewController() {
     delete m_mainWindow;
@@ -50,8 +100,7 @@ MainViewController::~MainViewController() {
 }
 
 void MainViewController::Draw() {
-    m_mainWindow = new Fl_Double_Window(100,100 ,548, 508, "Hooli Chat");
-    // m_mainWindow -> user_data((void*)(this));
+    m_mainWindow = new Fl_Double_Window(100,100 ,548, 508, kAppName.c_str());
     m_mainWindow -> user_data(static_cast<void*>(this));
 
     { 
@@ -82,8 +131,7 @@ void MainViewController::Draw() {
     { 
       Fl_Group* group2 = new Fl_Group(5, 25, 535, 415);
       { 
-        m_messagesFeed = new Fl_Multiline_Output (10, 35, 525, 310, "Chat");
-        // m_messagesFeed -> align(Fl_Align(FL_ALIGN_TOP_LEFT));
+        m_messagesFeed = new Fl_Multiline_Output (10, 35, 525, 310);
       }
       
       { 
@@ -96,19 +144,17 @@ void MainViewController::Draw() {
     { 
       Fl_Group* group3 = new Fl_Group(25, 455, 325, 60);
       { 
-        m_selectTaskDropDown = new Fl_Input_Choice(125, 456, 220, 27, "Select task variant");
+        m_selectTaskDropDown = new Fl_Input_Choice(125, 456, 220, 27, "Select task: ");
         m_selectTaskDropDown -> add("Select Items");
         addMenuOptionsArray(&m_dropdownOptions);
-        // m_selectTaskDropDown -> update_menubutton();
-        m_selectTaskDropDown -> callback([](Fl_Widget* widget, void* user_data){
-          auto* instance = static_cast<MainViewController*>(user_data);
-          instance -> onSelectOptionClicked(widget, user_data);
-        },this);
+        // m_selectTaskDropDown -> callback([](Fl_Widget* widget, void* user_data){
+        //   auto* instance = static_cast<MainViewController*>(user_data);
+        //   instance -> onSelectOptionClicked(widget, user_data);
+        // },this);
         m_selectTaskDropDown -> value(0);
       } 
       group3 -> end();
     }
-    // m_mainWindow -> resizable(m_mainWindow);
     m_mainWindow -> end();
     m_mainWindow -> show();
 }
