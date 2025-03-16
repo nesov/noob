@@ -2,6 +2,6 @@
 
 class IViewController {
     public:
-        virtual ~IViewController() = 0;
+        virtual ~IViewController() = default;
         virtual void Draw() = 0;
 };

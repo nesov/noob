@@ -1,8 +1,8 @@
 #pragma once
 
-#include "IViewController.h"
+#include "ssapi/INetworkService.h"
 
-#include "ssapi/INetwork.h"
+#include "IViewController.h"
 
 class Application {
     public:
@@ -12,5 +12,6 @@ class Application {
         static int run();
     private:
         IViewController* m_mainViewController;
-        INetwork* m_networkService;
+        INetworkService* m_networkService;
 };
+

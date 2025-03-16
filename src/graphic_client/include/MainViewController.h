@@ -14,15 +14,22 @@
 #include "IViewController.h"
 #include <FL/Fl_Text_Display.H>
 
+#include "ssapi/INetworkService.h"
+
 
 class MainViewController : public IViewController {
   using vector =  std::vector<std::string>;
 
   public:
-    MainViewController();
+    MainViewController() = delete;
+
+    MainViewController(INetworkService* service);
+
     ~MainViewController() override;
 
   private:
+    INetworkService* m_network; 
+
     Fl_Double_Window            *m_mainWindow;
     Fl_Button                   *m_connectButton;
     Fl_Button                   *m_exitButton;
@@ -32,20 +39,20 @@ class MainViewController : public IViewController {
 
     std::vector<std::string>    m_messages;
     std::vector<std::string>    m_dropdownOptions = {
-      "item 1", 
-      "item 2",
-      "item 3",
-      "item 4",
-      "item 5"
+      "Echo 0", 
+      "Task 1",
+      "Task 2",
+      "Task 4"
     };
   
     void Draw() override;
 
-    void printMessageHistory    (vector* m_messages);
-    void addMenuOptionsArray    (vector* m_dropdownOptions);
+    void printMessageHistory          (vector* m_messages);
+    void addMenuOptionsArray          (vector* m_dropdownOptions);
+    std::string composeMessageAndSend (int task, std::string &text);
+    int getSelectedTaskType();
     
-    void onSelectOptionClicked  (Fl_Widget* widget, void* user_data);
+    // void onSelectOptionClicked  (Fl_Widget* widget, void* user_data);
     void onConnectButtonClicked (Fl_Widget* widget, void* user_data);
-    void onExitButtonClicked    (Fl_Widget* widget, void* user_data);
-
+    void onExitButtonClicked(Fl_Widget *widget, void *user_data);
 };

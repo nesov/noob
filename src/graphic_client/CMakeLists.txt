@@ -1,11 +1,11 @@
 
-set(TARGET_NAME client)
-set(INCLUDE include)
+set(TARGET_NAME graphic_client)
+set(INCLUDE include 
+            ${CMAKE_SOURCE_DIR}/include)
 
 set(SOURCES src/main.cpp
             src/Application.cpp
             src/MainViewController.cpp
-            src/IViewController.cpp
 )
 
 
@@ -14,7 +14,7 @@ include(fltk_dep)
 
 add_executable(${TARGET_NAME} WIN32 MACOSX_BUNDLE ${SOURCES})
 target_include_directories(${TARGET_NAME} PRIVATE ${fltk_BINARY_DIR} ${fltk_SOURCE_DIR} ${INCLUDE})
-target_link_libraries(${TARGET_NAME} PRIVATE fltk fltk_gl fltk_images fltk_png fltk_jpeg fltk_z)
+target_link_libraries(${TARGET_NAME} PRIVATE fltk fltk_gl fltk_images fltk_png fltk_jpeg fltk_z PRIVATE ssapi)
 
 if(APPLE)
     target_link_libraries(${TARGET_NAME} PRIVATE "-framework Cocoa") 
