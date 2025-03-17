@@ -27,10 +27,10 @@ inline void MainViewController::scrollFeed() {
 }
 
 inline int MainViewController::getSelectedTaskType() {
-	std::string selected = m_selectTaskDropDown->value();
+	std::string selected = m_selectTaskDropDown -> value();
 	for (int i = 0; i < m_dropdownOptions.size(); i++) {
 		if (selected == m_dropdownOptions[i]) {
-			return i;
+			return i; //returning index is not best practice like smart books tell
 		}
 		else if (selected == m_dropdownOptions[3]) {
 			return 4;
@@ -48,10 +48,10 @@ std::string MainViewController::composeMessageAndSend(int task, std::string &tex
 	message.setData(text.c_str());
 	Message fromServ;
 
-	if (m_network->start()) {
+	if (m_network -> start()) {
 		if (m_network -> isConnected()) {
 			m_network -> sendMessage(message);
-			fromServ = m_network->receiveMessage();
+			fromServ = m_network -> receiveMessage();
 			m_network -> stop();
 		}
 		else {
@@ -71,9 +71,7 @@ inline void MainViewController::onExitButtonClicked(Fl_Widget *widget, void *use
 }
 
 MainViewController::MainViewController(INetworkService *service) {
-	if (service) {
-		m_network = service;
-	}
+	if (service) { m_network = service; }
 	Draw();
 }
 
@@ -82,13 +80,14 @@ MainViewController::~MainViewController() {
 	delete m_connectButton;
 	delete m_exitButton;
 	delete m_messagesFeed;
+	delete m_buff;
 	delete m_inputField;
 	delete m_selectTaskDropDown;
 }
 
 void MainViewController::Draw() {
-	m_mainWindow = new Fl_Double_Window(200, 200, 548, 508, kAppName.c_str());
-	m_mainWindow -> user_data(static_cast<void *>(this));
+	m_mainWindow = new Fl_Double_Window(200, 300, 548, 508, kAppName.c_str());
+	m_mainWindow -> user_data(static_cast<void*>(this));
 
 	{
 		m_connectButton = new Fl_Button(355, 455, 80, 30, "Send");

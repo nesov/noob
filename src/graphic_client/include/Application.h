@@ -5,13 +5,13 @@
 #include "IViewController.h"
 
 class Application {
-    public:
-        Application();
-        ~Application();
+ public:
+    Application();
+    ~Application();
+    static int run();
 
-        static int run();
-    private:
-        IViewController* m_mainViewController;
-        INetworkService* m_networkService;
+ private:
+    IViewController* m_mainViewController;
+    INetworkService* m_networkService;
 };
 
