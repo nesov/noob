@@ -1,3 +1,4 @@
+#include "consts.h"
 
 #include "ServerApplication.h"
 #include "MessageHandler.h"
@@ -6,7 +7,7 @@
 ServerApplication::ServerApplication(const int port) {
     lock();
     m_messageHandler = new MessageHandler;
-    m_networkService = (new NetworkServiceFactory) -> createNetworkService(false, "127.0.0.1", 8080);
+    m_networkService = (new NetworkServiceFactory) -> createNetworkService(false, kHost, kPort);
     m_networkService -> start();
 }
 
