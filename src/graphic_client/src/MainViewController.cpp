@@ -91,7 +91,7 @@ void MainViewController::Draw() {
 
 	{
 		m_connectButton = new Fl_Button(355, 455, 80, 30, "Send");
-		m_connectButton -> tooltip("Click to send");
+		m_connectButton -> tooltip("Click here to send message");
 		m_connectButton -> down_box(FL_DOWN_BOX);
 		m_connectButton -> color(FL_LIGHT1);
 		m_connectButton -> selection_color(FL_LIGHT1);
@@ -103,6 +103,7 @@ void MainViewController::Draw() {
 	{
 		m_exitButton = new Fl_Button(445, 455, 80, 30, "Exit");
 		m_exitButton -> down_box(FL_DOWN_BOX);
+		m_exitButton -> tooltip("Click here to Exit");
 		m_exitButton -> callback([](Fl_Widget *widget, void *data) {
             auto *instance = static_cast<MainViewController*>(data);
             instance -> onExitButtonClicked(widget, data); }, this);
@@ -118,11 +119,14 @@ void MainViewController::Draw() {
 	{
 		m_inputField = new Fl_Multiline_Input(10, 372, 525, 68);
 		m_inputField -> align(Fl_Align(292));
+		m_inputField -> tooltip("Type here");
+		m_inputField -> wrap(1);
 	}
 
 	{
 		m_selectTaskDropDown = new Fl_Input_Choice(125, 456, 220, 27, "Select task: ");
 		m_selectTaskDropDown -> add("Select Items");
+		m_selectTaskDropDown -> tooltip("Here is a tasks list that are supported to process.");
 		addMenuOptionsArray(m_dropdownOptions);
 		m_selectTaskDropDown -> value(0);
 	}
