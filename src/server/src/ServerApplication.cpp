@@ -7,7 +7,7 @@
 ServerApplication::ServerApplication(const int port) {
     lock();
     m_messageHandler = new MessageHandler;
-    m_networkService = (new NetworkServiceFactory) -> createNetworkService(false, kHost, kPort);
+    m_networkService = m_netServiceFactory.createNetworkService(false, kHost, kPort);
     m_networkService -> start();
 }
 

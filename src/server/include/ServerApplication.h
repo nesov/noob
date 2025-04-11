@@ -32,6 +32,7 @@ class ServerApplication {
 
     IMessageHandler*    m_messageHandler;
     INetworkService*    m_networkService;
+    NetworkServiceFactory m_netServiceFactory;
     MessageQueue<std::pair<int, Message> > m_queue;
     std::vector <std::thread> m_workers;
     int m_lock;
