@@ -6,7 +6,7 @@
 
 
 Application::Application (){
-    m_networkService = (new NetworkServiceFactory) -> createNetworkService(true, kHost, kPort);
+    m_networkService = m_netServiceFactory.createNetworkService(true, kHost, kPort);
     m_mainViewController = new MainViewController(m_networkService);
 }
 
