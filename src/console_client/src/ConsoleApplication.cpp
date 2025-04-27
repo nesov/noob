@@ -8,7 +8,7 @@
 
 
 ConsoleApplication::ConsoleApplication(){
-    m_network = (new NetworkServiceFactory) -> createNetworkService(true, kHost, kPort);
+    m_network = m_netFactory.createNetworkService(true, kHost, kPort);
     m_dialogs.emplace_back(new MainDialog);
     m_dialogs.emplace_back(new WantPlayAgainDialog);
 }
