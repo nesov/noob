@@ -21,4 +21,5 @@ private:
     bool composeMessageAndSend(int task, std::string &text);
     INetworkService *m_network;
     std::vector<IDialog *> m_dialogs;
+    NetworkServiceFactory m_netFactory;
 };
